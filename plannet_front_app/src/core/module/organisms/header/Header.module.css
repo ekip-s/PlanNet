@@ -1,0 +1,15 @@
+.header {
+    background-color: var(--header-color);
+}
+
+.wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-left: var(--indentation);
+    margin-right: var(--indentation);
+}
+
+.logo {
+    padding: 3px;
+}
