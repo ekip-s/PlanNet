@@ -1,0 +1,23 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH and deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd /home/deploy/app/PlanNet
+            git reset --hard HEAD
+            git pull origin master
+            docker-compose -f docker-compose.prod.yml down
+            docker-compose -f docker-compose.prod.yml up -d --build
