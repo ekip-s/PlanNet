@@ -16,6 +16,7 @@ services:
       - ./nginx/conf.d:/etc/nginx/conf.d
       - ./certs:/etc/letsencrypt
       - ./plannet_front_app/dist:/usr/share/nginx/html
+      - ./certs:/var/www/html
     depends_on:
       - plannet_front_app
     networks:
