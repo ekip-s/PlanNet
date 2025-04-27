@@ -3,12 +3,57 @@ name: Deploy to Production
 on:
   push:
     branches: [master]
+  schedule:
+    - cron: '0 2 * * *'
 
 jobs:
-  deploy:
+  certbot-renew:
+    name: Issue or Renew Certificates
     runs-on: ubuntu-latest
     steps:
-      - name: SSH and deploy
+      - name: SSH and run certbot tasks
+        uses: appleboy/ssh-action@master
+        env:
+          CERTBOT_EMAIL: ${{ secrets.CERTBOT_EMAIL }}
+          CERTBOT_DOMAINS: ${{ secrets.CERTBOT_DOMAINS }}
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            set -e
+            cd PlanNet
+
+            # 1. Start only nginx to serve HTTP challenges
+            docker compose -f docker-compose.prod.yml up -d nginx
+
+            # 2. Ensure certbot data volume exists
+            docker volume create cert_data || true
+
+            # 3. Prepare domain args
+            DOMAIN_ARGS=""
+            for d in $(echo "$CERTBOT_DOMAINS" | tr ',' ' '); do
+              DOMAIN_ARGS+=" -d $d";
+            done
+
+            # 4. Issue or renew certificates
+            docker compose -f docker-compose.prod.yml run --rm certbot certonly \
+              --webroot --webroot-path=/var/www/certbot \
+              --agree-tos --no-eff-email \
+              --email "$CERTBOT_EMAIL" \
+              $DOMAIN_ARGS || true
+
+            # 5. Reload nginx to pick up new certificates
+            docker compose -f docker-compose.prod.yml kill -s SIGHUP nginx || true
+
+  deploy:
+    name: Deploy Application
+    runs-on: ubuntu-latest
+    needs: certbot-renew
+    if: ${{ github.event_name == 'push' }}
+    steps:
+      - name: SSH and deploy app
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -16,8 +61,13 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            cd app/PlanNet
+            set -e
+            cd PlanNet
+
+            # 1. Update code
             git reset --hard HEAD
             git pull origin master
-            docker-compose -f docker-compose.prod.yml down --remove-orphans
-            docker-compose -f docker-compose.prod.yml up -d --build
+
+            # 2. Full restart of app services
+            docker compose -f docker-compose.prod.yml down --remove-orphans
+            docker compose -f docker-compose.prod.yml up -d --build
