@@ -3,6 +3,36 @@ services:
     build:
       context: .
       dockerfile: plannet_front_app/Dockerfile
+    networks:
+      - plannet-network
+
+  nginx:
+    image: nginx:alpine
     ports:
-      - 5173:5173 
-    restart: always  
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./certs:/etc/letsencrypt
+      - ./plannet_front_app/dist:/usr/share/nginx/html
+    depends_on:
+      - plannet_front_app
+    networks:
+      - plannet-network
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./certs:/etc/letsencrypt
+      - ./plannet_front_app/dist:/var/www/html
+    command: certonly --webroot --webroot-path=/var/www/html --email your@email.com --agree-tos --no-eff-email --force-renewal -d darkt.ru -d www.darkt.ru
+    depends_on:
+      - nginx        
+
+networks:
+  plannet-network:
+    driver: bridge      
+
+volumes:
+  certs:    
