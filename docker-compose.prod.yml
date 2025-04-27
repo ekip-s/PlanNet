@@ -1,15 +1,46 @@
+version: '3.8'
+
 services:
+  nginx:
+    build: ./nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./certbot/www:/var/www/certbot  # Bind mount для challenge-файлов
+      - ./certbot/conf:/etc/letsencrypt  # Постоянное хранение сертификатов
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf  # Монтирование конфига
+    networks:
+      - main-network
+    depends_on:
+      - plannet_front_app
+      - certbot
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+      - ./certbot/certbot.ini:/etc/letsencrypt/certbot.ini  # Конфиг Certbot
+    command: certonly --webroot --config /etc/letsencrypt/certbot.ini --keep-until-expiring
+    networks:
+      - main-network
+    restart: unless-stopped  
+
   plannet_front_app:
     build:
       context: .
       dockerfile: plannet_front_app/Dockerfile
     volumes:
       - ./plannet_front_app:/app
-    ports:
-      - "5173:5173"  
     networks:
-      - front_network
+      - main-network
+    expose:
+      - "5173"
+    restart: always  
+
+volumes: 
 
 networks:
-  front_network:
+  main-network:
     driver: bridge
