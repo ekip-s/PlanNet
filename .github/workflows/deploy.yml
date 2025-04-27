@@ -25,6 +25,10 @@ jobs:
             set -e
             cd PlanNet
 
+            # Update code base before certbot tasks
+            git reset --hard HEAD
+            git pull origin master
+
             # 1. Start only nginx to serve HTTP challenges
             docker compose -f docker-compose.prod.yml up -d nginx
 
@@ -64,10 +68,6 @@ jobs:
             set -e
             cd PlanNet
 
-            # 1. Update code
-            git reset --hard HEAD
-            git pull origin master
-
-            # 2. Full restart of app services
+            # Full restart of app services (code already updated in certbot-renew)
             docker compose -f docker-compose.prod.yml down --remove-orphans
             docker compose -f docker-compose.prod.yml up -d --build
