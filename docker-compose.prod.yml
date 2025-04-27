@@ -13,10 +13,10 @@ services:
       - "443:443"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./nginx/darkt.ru.conf:/etc/nginx/darkt.ru.conf
+      - ./nginx/darkt.ru.conf:/etc/nginx/conf.d/default.conf
       - ./certs:/etc/letsencrypt
       - ./plannet_front_app/dist:/usr/share/nginx/html
-      - ./plannet_front_app/dist/.well-known:/usr/share/nginx/html/.well-known  # добавил это
+      - certbot_www:/var/www/certbot
     depends_on:
       - plannet_front_app
     networks:
@@ -26,9 +26,8 @@ services:
     image: certbot/certbot
     volumes:
       - ./certs:/etc/letsencrypt
-      - ./plannet_front_app/dist:/usr/share/nginx/html
-      - ./plannet_front_app/dist/.well-known:/var/www/certbot/.well-known  # изменил путь
-    command: certonly --webroot --webroot-path=/var/www/certbot/.well-known --email your@email.com --agree-tos --no-eff-email --force-renewal -d darkt.ru -d www.darkt.ru
+      - certbot_www:/var/www/certbot
+    command: certonly --webroot --webroot-path=/var/www/certbot --email ekip-s@yandex.ru --agree-tos --no-eff-email --force-renewal -d darkt.ru -d www.darkt.ru
     depends_on:
       - nginx
 
@@ -38,3 +37,4 @@ networks:
 
 volumes:
   certs:
+  certbot_www:
