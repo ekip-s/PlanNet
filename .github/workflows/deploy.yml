@@ -4,24 +4,23 @@ on:
   push:
     branches: [master]
   schedule:
-    # Daily renewal at 02:00 UTC (04:00 Amsterdam time)
     - cron: '0 2 * * *'
 
 jobs:
   certbot-renew:
-    name: "Issue or Renew Certificates"
+    name: Issue or Renew Certificates
     runs-on: ubuntu-latest
     steps:
       - name: SSH and run certbot tasks
         uses: appleboy/ssh-action@master
+        env:
+          CERTBOT_EMAIL: ${{ secrets.CERTBOT_EMAIL }}
+          CERTBOT_DOMAINS: ${{ secrets.CERTBOT_DOMAINS }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          env:
-            CERTBOT_EMAIL: ${{ secrets.CERTBOT_EMAIL }}
-            CERTBOT_DOMAINS: ${{ secrets.CERTBOT_DOMAINS }}
           script: |
             set -e
             cd PlanNet
@@ -49,10 +48,10 @@ jobs:
             docker compose -f docker-compose.prod.yml kill -s SIGHUP nginx || true
 
   deploy:
-    name: "Deploy Application"
+    name: Deploy Application
     runs-on: ubuntu-latest
     needs: certbot-renew
-    if: github.event_name == 'push'
+    if: ${{ github.event_name == 'push' }}
     steps:
       - name: SSH and deploy app
         uses: appleboy/ssh-action@master
