@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   nginx:
     build: ./nginx
@@ -34,6 +32,7 @@ services:
     restart: always  
 
 volumes: 
+  cert_data:
 
 networks:
   main-network:
