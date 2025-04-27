@@ -15,7 +15,6 @@ services:
     container_name: nginx_container
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
-      - ./darkt.ru.conf:/etc/nginx/conf.d/default.conf
       - ./ssl:/etc/ssl
     ports:
       - "80:80"
