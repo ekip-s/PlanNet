@@ -1,0 +1,8 @@
+services:
+  plannet_front_app:
+    build:
+      context: .
+      dockerfile: plannet_front_app/Dockerfile
+    ports:
+      - 5173:5173 
+    restart: always  
