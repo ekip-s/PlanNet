@@ -5,29 +5,8 @@ services:
       dockerfile: plannet_front_app/Dockerfile
     volumes:
       - ./plannet_front_app:/app
-    networks:
-      - front_network
-
-  nginx:
-    image: nginx:latest
-    container_name: nginx_container
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-      - ./ssl:/etc/ssl
     ports:
-      - "80:80"
-      - "443:443"
-    networks:
-      - front_network
-    depends_on:
-      - plannet_front_app
-
-  certbot:
-    image: certbot/certbot
-    container_name: certbot_container
-    volumes:
-      - ./ssl:/etc/ssl
-    entrypoint: "/bin/sh -c 'trap exit TERM; certbot certonly --standalone --preferred-challenges http --email your-email@example.com --agree-tos --no-eff-email -d darkt.ru -d www.darkt.ru && while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+      - "5173:5173"  
     networks:
       - front_network
 
