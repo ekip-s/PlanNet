@@ -23,7 +23,6 @@ services:
       - front_network
     depends_on:
       - plannet_front_app
-      - certbot
 
   certbot:
     image: certbot/certbot
@@ -33,8 +32,6 @@ services:
     entrypoint: "/bin/sh -c 'trap exit TERM; certbot certonly --standalone --preferred-challenges http --email your-email@example.com --agree-tos --no-eff-email -d darkt.ru -d www.darkt.ru && while :; do certbot renew; sleep 12h & wait $${!}; done;'"
     networks:
       - front_network
-    depends_on:
-      - nginx
 
 networks:
   front_network:
