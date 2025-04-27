@@ -16,7 +16,6 @@ services:
       - ./nginx/conf.d:/etc/nginx/conf.d
       - ./certs:/etc/letsencrypt
       - ./plannet_front_app/dist:/usr/share/nginx/html
-      - ./certs:/var/www/html
     depends_on:
       - plannet_front_app
     networks:
@@ -26,8 +25,8 @@ services:
     image: certbot/certbot
     volumes:
       - ./certs:/etc/letsencrypt
-      - ./plannet_front_app/dist:/var/www/html
-    command: certonly --webroot --webroot-path=/var/www/html --email your@email.com --agree-tos --no-eff-email --force-renewal -d darkt.ru -d www.darkt.ru
+      - ./plannet_front_app/dist:/usr/share/nginx/html
+    command: certonly --webroot --webroot-path=/usr/share/nginx/html --email your@email.com --agree-tos --no-eff-email --force-renewal -d darkt.ru -d www.darkt.ru
     depends_on:
       - nginx        
 
@@ -36,4 +35,4 @@ networks:
     driver: bridge      
 
 volumes:
-  certs:    
+  certs:
