@@ -1,0 +1,1 @@
+1. приложение использует подход Atomic design. Описание подхода можно смотреть [тута](https://simpleone.ru/glossary/atomic-design-atomic-design).
