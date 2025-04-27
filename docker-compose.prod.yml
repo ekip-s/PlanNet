@@ -5,8 +5,6 @@ services:
       dockerfile: plannet_front_app/Dockerfile
     volumes:
       - ./plannet_front_app:/app
-    ports:
-      - "80:80"
     networks:
       - front_network
 
