@@ -5,6 +5,7 @@ services:
       dockerfile: plannet_front_app/Dockerfile
     networks:
       - plannet-network
+    restart: unless-stopped
 
   nginx:
     image: nginx:alpine
@@ -13,28 +14,32 @@ services:
       - "443:443"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./nginx/darkt.ru.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/conf.d:/etc/nginx/conf.d
       - ./certs:/etc/letsencrypt
       - certbot_www:/var/www/certbot
     networks:
       - plannet-network
     restart: unless-stopped
+    command: >
+      sh -c "while [ ! -f /etc/letsencrypt/live/darkt.ru/fullchain.pem ];
+      do sleep 1; done && nginx -s reload && nginx -g 'daemon off;'"
+    depends_on:
+      - plannet_front_app
 
   certbot:
     image: certbot/certbot
     volumes:
       - ./certs:/etc/letsencrypt
       - certbot_www:/var/www/certbot
-    command: certonly --webroot --webroot-path=/var/www/certbot --email ekip-s@yandex.ru --agree-tos --no-eff-email -d darkt.ru -d www.darkt.ru
+    command: certonly --webroot --webroot-path=/var/www/certbot --email ekip-s@yandex.ru --agree-tos --no-eff-email --force-renewal -d darkt.ru -d www.darkt.ru
     depends_on:
       - nginx
     networks:
-      - plannet-network  
+      - plannet-network
 
 networks:
   plannet-network:
     driver: bridge
 
 volumes:
-  certs:
   certbot_www:
