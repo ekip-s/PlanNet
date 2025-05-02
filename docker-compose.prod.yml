@@ -15,8 +15,6 @@ services:
     build:
       context: .
       dockerfile: plannet_front_app/Dockerfile
-    volumes:
-      - ./plannet_front_app:/app
     expose:
       - "5173"
     restart: always
