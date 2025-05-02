@@ -1,5 +1,10 @@
 .header {
     background-color: var(--header-color);
+    box-shadow: var(--shadow-sm);
+    display: block;
+    min-height: 20px;
+    position: relative;
+    z-index: 1;
 }
 
 .wrapper {
@@ -10,6 +15,8 @@
     margin-right: var(--indentation);
 }
 
-.logo {
+.logo h3 {
     padding: 3px;
+    color: var(--text);
+    letter-spacing: 1px;
 }

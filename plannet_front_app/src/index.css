@@ -1,12 +1,14 @@
 :root {
     --header-color: #373739;
     --app-main-color: #565658;
-    --color-shadow: rgba(0,0,0,0.4);
+    --color-shadow: rgba(145, 144, 144, 0.52);
 
     --shadow-sm: 0 2px 4px var(--color-shadow);
     --shadow-md: 0 4px 8px var(--color-shadow);
     --shadow-lg: 0 8px 16px var(--color-shadow);
-    --shadow-accent: 0 4px 12px rgba(255,215,0,0.3);
+    --shadow-accent: 0 4px 12px rgba(237, 211, 86, 0.93);
+
+    --text: white;
 
 
     --indentation: 5%;
