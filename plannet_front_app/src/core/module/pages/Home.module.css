@@ -1,18 +1,24 @@
-.styles {
+.home {
     margin-top: 10px;
     margin-right: var(--indentation);
     margin-left: var(--indentation);
 }
 
-.styles h3 {
+.home h3 {
     color: var(--text);
 }
 
 .serviceList {
     margin-top: 15px;
+    margin-bottom: 15px;
     display: flex;
     align-items: stretch;
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 20px;
+}
+
+.home hr {
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
