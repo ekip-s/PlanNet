@@ -1,0 +1,14 @@
+.button {
+    padding: 5px;
+    border: none;
+    border-radius: 4px;
+    background-color: var(--accent-text);
+    font-size: 15px;
+    height: max-content;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+}
+
+.button:hover {
+    opacity: 0.7;
+}
