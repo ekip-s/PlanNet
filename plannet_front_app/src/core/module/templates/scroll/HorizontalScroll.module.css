@@ -1,0 +1,73 @@
+.container {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    padding: 20px 10px; /* Верх/низ должны быть больше, чем размытие тени */
+    margin: -10px -20px; /* Компенсируем padding */
+    box-sizing: border-box;
+}
+
+.scrollContainer {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 350px;
+    align-items: stretch;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    height: 100%;
+    grid-template-rows: 1fr;
+    padding: 10px; /* Пространство для теней */
+    clip-path: inset( -20px -10px -20px -10px );
+}
+
+.scrollContainer > * {
+    height: 100%;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 3px;
+}
+
+.scrollContainer::-webkit-scrollbar {
+    display: none;
+}
+
+.scrollContainer::-webkit-scrollbar {
+    display: none;
+}
+
+.arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 70%;
+    border-radius: 7px;
+    background: var(--accent-text);
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    font-size: 18px;
+    cursor: pointer;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s;
+}
+
+.leftArrow {
+    left: 10px;
+}
+
+.rightArrow {
+    right: 10px;
+}
+
+.arrow:hover {
+    background: #f0f0f0;
+}

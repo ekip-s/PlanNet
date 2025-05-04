@@ -1,0 +1,23 @@
+.title {
+    color: var(--text);
+    padding: 3px;
+    margin-bottom: 5px;
+}
+
+.description {
+    color: var(--side-text);
+}
+
+.img {
+    height: 50px;
+}
+
+.wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.technologiesNode {
+    height: 100%;
+}
