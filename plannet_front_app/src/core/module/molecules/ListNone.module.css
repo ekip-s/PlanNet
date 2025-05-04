@@ -1,0 +1,25 @@
+.card {
+    min-width: 22rem;
+    max-width: 22rem;
+}
+
+.title {
+    color: var(--text);
+    padding: 4px;
+}
+
+.description {
+    color: var(--side-text)
+}
+
+.wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+}
+
+.descriptionModule {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

@@ -9,7 +9,8 @@
     --shadow-accent: 0 4px 12px rgba(237, 211, 86, 0.93);
 
     --text: white;
-
+    --side-text: rgba(204, 204, 204, 0.8);
+    --accent-text: rgba(250, 216, 59, 0.93);
 
     --indentation: 5%;
 }
