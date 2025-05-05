@@ -1,11 +1,13 @@
 .card {
-    min-width: 22rem;
-    max-width: 22rem;
+    min-width: 24rem;
+    max-width: 24rem;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
 }
 
 .title {
     color: var(--text);
-    padding: 4px;
+    margin-bottom: 10px;
 }
 
 .description {
@@ -14,12 +16,13 @@
 
 .wrapper {
     display: flex;
-    align-items: center;
-    justify-content: end;
+    justify-content: flex-end;
+    margin-top: auto;
 }
 
 .descriptionModule {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    min-height: 0;
 }

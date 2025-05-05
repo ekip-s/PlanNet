@@ -1,0 +1,14 @@
+.logoutPage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 5rem;
+}
+
+.logoutPage div {
+    border: 1px solid var(--header-border);
+    padding: 2rem;
+    background-color: var(--header-bg);
+    border-radius: var(--btn-radius);
+    box-shadow: var(--shadow-md);
+}
