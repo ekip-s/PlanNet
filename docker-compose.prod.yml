@@ -10,6 +10,7 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
     networks:
       - main-network
+      - keycloak-main-network
 
   plannet_front_app:
     build:
@@ -20,10 +21,55 @@ services:
     restart: always
     networks:
       - main-network
+      - keycloak-main-network
+
+  keycloak-db:
+    image: postgres:16.2
+    container_name: keycloak_db
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - postgresdata:/var/lib/postgresql/data
+    restart: always 
+    networks: 
+      - keycloak-db-network
+    
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.1.4
+    container_name: keycloak
+    command: ["start", "--verbose"]
+    environment:
+      KC_DB: postgres
+      KC_DB_ADDR: keycloak-db
+      KC_DB_URL_DATABASE: ${POSTGRES_DB}
+      KC_DB_USERNAME: ${POSTGRES_USER}
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
+      KC_DB_URL_HOST: keycloak-db
+      KC_DB_URL_PORT: 5432
+      KC_DB_DRIVER: org.postgresql.Driver
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KC_HTTP_ENABLED: "true"
+      KC_HOSTNAME: darkt.ru
+      KC_PROXY: edge
+      KC_HOSTNAME_STRICT: "false"
+    depends_on:
+      - keycloak-db
+    restart: always
+    networks: 
+      - keycloak-db-network
+      - keycloak-main-network     
 
 volumes:
   cert_data:
+  postgresdata:  
 
 networks:
   main-network:
-    driver: bridge      
+    driver: bridge
+  keycloak-db-network:
+    driver: bridge  
+  keycloak-main-network:
+    driver: bridge  

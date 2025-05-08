@@ -1,0 +1,9 @@
+<svg width="100" height="100" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Фоновая стрелка-поток -->
+    <path d="M30 60 L90 60 M90 60 L75 45 M90 60 L75 75" stroke="#4F46E5" stroke-width="3" stroke-linecap="round"/>
+
+    <!-- Гибкие модули -->
+    <rect x="25" y="40" width="30" height="30" rx="6" fill="#4F46E5" opacity="0.8"/>
+    <rect x="45" y="60" width="30" height="30" rx="6" fill="#10B981" opacity="0.8"/>
+    <rect x="65" y="40" width="30" height="30" rx="6" fill="#F59E0B" opacity="0.8"/>
+</svg>
