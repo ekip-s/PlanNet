@@ -24,6 +24,8 @@ services:
       DB_PASSWORD: ${POSTGRES_PASSWORD}
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD} 
+    volumes:
+      - ./realm-config-dev.json:/opt/keycloak/data/import/realm-config.json  
     depends_on:
       - keycloak-db
     ports:
