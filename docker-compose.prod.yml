@@ -53,10 +53,11 @@ services:
       KC_HOSTNAME_STRICT_HTTPS: "false"
       KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "true"
       KC_HOSTNAME: "darkt.ru"
-      KC_HOSTNAME_ADMIN: "darkt.ru"
-      KC_ADMIN_URL: "https://darkt.ru/auth/admin/"
+      KC_HOSTNAME_ADMIN: "https://darkt.ru"
+      KC_HTTP_RELATIVE_PATH: /auth
       KC_PROXY_HEADERS: forwarded
       KC_HOSTNAME_STRICT: "false"
+      KC_PROXY: edge
     depends_on:
       - keycloak-db
     restart: always
