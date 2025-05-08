@@ -42,29 +42,21 @@ services:
     command: ["start", "--verbose"]
     environment:
       KC_DB: postgres
-      KC_DB_ADDR: keycloak-db
       KC_DB_URL_DATABASE: ${POSTGRES_DB}
       KC_DB_USERNAME: ${POSTGRES_USER}
       KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
       KC_DB_URL_HOST: keycloak-db
       KC_DB_URL_PORT: 5432
-      KC_DB_DRIVER: org.postgresql.Driver
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
       KC_HTTP_ENABLED: "true"
-      KC_HTTP_RELATIVE_PATH: /auth
-      KC_HOSTNAME_STRICT_HTTPS: "true"
-      KC_HOSTNAME_STRICT_BACKCHANNEL: "true"
-      KC_HOSTNAME: "https://darkt.ru"
-      KC_HOSTNAME_ADMIN: "https://darkt.ru"
+      KC_HOSTNAME_STRICT_HTTPS: "false"
+      KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "true"
+      KC_HOSTNAME: "darkt.ru"
+      KC_HOSTNAME_ADMIN: "darkt.ru"
       KC_ADMIN_URL: "https://darkt.ru/auth/admin/"
-      KC_HTTP_CORS_ALLOWED_ORIGINS: "https://darkt.ru"
-      KC_HTTP_CORS_ALLOW_METHODS: "GET,POST,PUT,DELETE,PATCH,OPTIONS"
-      KC_HTTP_CORS_ALLOW_HEADERS: "*"
       KC_PROXY_HEADERS: forwarded
       KC_HOSTNAME_STRICT: "false"
-      KC_HTTPS_PORT: 8443
-      KC_HTTPS_CLIENT_AUTH: none
     depends_on:
       - keycloak-db
     restart: always
