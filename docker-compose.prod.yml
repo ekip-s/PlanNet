@@ -55,9 +55,9 @@ services:
       KC_HTTP_RELATIVE_PATH: /auth
       KC_HOSTNAME_STRICT_HTTPS: "true"
       KC_HOSTNAME_STRICT_BACKCHANNEL: "true"
-      KC_HOSTNAME: darkt.ru
-      KC_HOSTNAME_ADMIN: darkt.ru
-      KC_ADMIN_URL: https://darkt.ru/auth/admin/
+      KC_HOSTNAME: "https://darkt.ru"
+      KC_HOSTNAME_ADMIN: "https://darkt.ru"
+      KC_ADMIN_URL: "https://darkt.ru/auth/admin/"
       KC_HTTP_CORS_ALLOWED_ORIGINS: "https://darkt.ru"
       KC_HTTP_CORS_ALLOW_METHODS: "GET,POST,PUT,DELETE,PATCH,OPTIONS"
       KC_HTTP_CORS_ALLOW_HEADERS: "*"
