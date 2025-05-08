@@ -52,6 +52,9 @@ services:
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
       KC_HTTP_ENABLED: "true"
+      KC_HTTP_RELATIVE_PATH: /auth
+      KC_HOSTNAME_STRICT_HTTPS: "true"
+      KC_HOSTNAME_STRICT_BACKCHANNEL: "true"
       KC_HOSTNAME: darkt.ru
       KC_PROXY: edge
       KC_HOSTNAME_STRICT: "false"
@@ -73,3 +76,4 @@ networks:
     driver: bridge  
   keycloak-main-network:
     driver: bridge  
+    internal: false
