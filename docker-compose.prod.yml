@@ -58,6 +58,8 @@ services:
       KC_HOSTNAME: darkt.ru
       KC_ADMIN_URL: https://darkt.ru/auth/admin/
       KC_HTTP_CORS_ALLOWED_ORIGINS: "https://darkt.ru"
+      KC_HTTP_CORS_ALLOW_METHODS: "GET,POST,PUT,DELETE,PATCH,OPTIONS"
+      KC_HTTP_CORS_ALLOW_HEADERS: "*"
       KC_PROXY: edge
       KC_HOSTNAME_STRICT: "false"
     depends_on:
