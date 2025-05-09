@@ -50,12 +50,22 @@ services:
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
       # Настройки хоста (актуальная версия v2)
       KC_HOSTNAME_URL: https://darkt.ru  
-      KC_HOSTNAME_ADMIN_URL: https://darkt.ru/auth
+      KC_HOSTNAME_ADMIN_URL: https://darkt.ru/auth/admin
       # Настройки проксирования
       KC_PROXY: edge 
+      KC_PROXY_HEADERS: forwarded
       KC_HTTP_ENABLED: true 
+      # Отключаем проверки для работы за прокси
+      KC_HOSTNAME_STRICT: "false"
+      KC_HOSTNAME_STRICT_HTTPS: "false"
+      KC_HOSTNAME_STRICT_BACKCHANNEL: "false"
+      KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "false"
       # Логирование
       KC_LOG_LEVEL: DEBUG
+    restart: always 
+    networks: 
+      - keycloak-db-network  
+      - keycloak-main-network
 
 volumes:
   cert_data:
