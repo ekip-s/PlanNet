@@ -45,23 +45,17 @@ services:
       KC_DB_URL: jdbc:postgresql://keycloak-db:5432/${POSTGRES_DB}
       KC_DB_USERNAME: ${POSTGRES_USER}
       KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
+      # Аутентификация администратора
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
-      # HTTP/HTTPS (ключевые изменения!)
-      KC_HTTP_ENABLED: "true"
-      KC_HTTPS_CERTIFICATE_FILE: ""
-      KC_HTTPS_CERTIFICATE_KEY_FILE: ""
-      # Хосты и прокси
-      KC_HOSTNAME: darkt.ru
-      KC_HOSTNAME_ADMIN: https://darkt.ru/auth
-      KC_PROXY: edge
-      KC_PROXY_HEADERS: forwarded 
-      # Оптимизация
-      KC_HOSTNAME_STRICT: "false"
-      KC_HOSTNAME_STRICT_HTTPS: "false"
-      KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "true"
+      # Настройки хоста (актуальная версия v2)
+      KC_HOSTNAME_URL: https://darkt.ru  
+      KC_HOSTNAME_ADMIN_URL: https://darkt.ru/auth
+      # Настройки проксирования
+      KC_PROXY: edge 
+      KC_HTTP_ENABLED: true 
       # Логирование
-      KC_LOG_LEVEL: INFO   
+      KC_LOG_LEVEL: DEBUG
 
 volumes:
   cert_data:
