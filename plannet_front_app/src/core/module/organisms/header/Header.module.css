@@ -15,6 +15,10 @@
     margin-right: var(--indentation);
 }
 
+.logo {
+    cursor: pointer;
+}
+
 .logo h3 {
     padding: 3px;
     color: var(--text);

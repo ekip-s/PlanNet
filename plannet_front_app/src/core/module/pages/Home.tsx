@@ -4,6 +4,7 @@ import money_logo from "../../../assets/money.svg";
 import new_logo from "../../../assets/new.svg";
 import nginx from "../../../assets/mginx.svg";
 import task_logo from "../../../assets/task.svg";
+import keycloak_logo from "../../../assets/keycloak.svg";
 import HorizontalScroll from "../templates/scroll/HorizontalScroll.tsx";
 import TechnologiesNode from "../molecules/TechnologiesNode.tsx";
 
@@ -65,6 +66,12 @@ const technologiesList:TechnologiesListProps[] = [
         title: "nginx",
         description: "HTTP-сервер, обратный прокси сервер с поддержкой кеширования и балансировки нагрузки",
         logoSvg: nginx,
+    },
+    {
+        id: 2,
+        title: "Keycloak",
+        description: "Система управления идентификацией и доступом",
+        logoSvg: keycloak_logo,
     },
 ]
 
