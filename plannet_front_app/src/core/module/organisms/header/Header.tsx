@@ -1,5 +1,6 @@
 import styles from './Header.module.css'
 import {useNavigate} from "react-router";
+import Profile from "../../molecules/profile/Profile.tsx";
 
 const Header = () => {
     const navigate = useNavigate();
@@ -13,7 +14,9 @@ const Header = () => {
             <div className={styles.logo} onClick={logoClickHandler}>
                 <h3>Plan Net</h3>
             </div>
-            <div></div>
+            <div>
+                <Profile />
+            </div>
         </div>
     </header>
 }
