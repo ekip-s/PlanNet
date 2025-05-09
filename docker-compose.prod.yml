@@ -56,8 +56,8 @@ services:
       KC_PROXY_HEADERS: forwarded
       KC_HTTP_ENABLED: true 
       # Отключаем проверки для работы за прокси
-      KC_HOSTNAME_STRICT: "false"
-      KC_HOSTNAME_STRICT_HTTPS: "false"
+      KC_HOSTNAME_STRICT: "true"
+      KC_HOSTNAME_STRICT_HTTPS: "true"
       KC_HOSTNAME_STRICT_BACKCHANNEL: "false"
       KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "false"
       # Логирование
