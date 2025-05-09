@@ -42,8 +42,9 @@ services:
     command: 
       - start
       - --http-relative-path=/auth
-      - --proxy-headers
-      - forwarded
+      - --proxy=edge
+      - --proxy-headers=forwarded
+      - --http-enabled=true
       - --hostname-strict=false
     environment:
       KC_DB: postgres
