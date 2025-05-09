@@ -39,7 +39,12 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:26.1.4
     container_name: keycloak
-    command: ["start", "--http-relative-path=/auth"]
+    command: 
+      - start
+      - --http-relative-path=/auth
+      - --proxy-headers
+      - forwarded
+      - --hostname-strict=false
     environment:
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://keycloak-db:5432/${POSTGRES_DB}
@@ -49,6 +54,7 @@ services:
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
       # Настройки хоста (актуальная версия v2)
+      KC_HOSTNAME: darkt.ru
       KC_HOSTNAME_URL: https://darkt.ru
       KC_HOSTNAME_ADMIN_URL: https://darkt.ru/auth/admin
       # Настройки проксирования
@@ -56,8 +62,8 @@ services:
       KC_PROXY_HEADERS: forwarded
       KC_HTTP_ENABLED: true 
       # Отключаем проверки для работы за прокси
-      KC_HOSTNAME_STRICT: "true"
-      KC_HOSTNAME_STRICT_HTTPS: "true"
+      KC_HOSTNAME_STRICT: "false"
+      KC_HOSTNAME_STRICT_HTTPS: "false"
       KC_HOSTNAME_STRICT_BACKCHANNEL: "false"
       KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "false"
       # Логирование
