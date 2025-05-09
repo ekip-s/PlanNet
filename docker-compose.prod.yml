@@ -49,6 +49,7 @@ services:
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
       # Настройки хоста (актуальная версия v2)
+      KC_CONTEXT_PATH: /auth
       KC_HOSTNAME_URL: https://darkt.ru  
       KC_HOSTNAME_ADMIN_URL: https://darkt.ru/auth/admin
       # Настройки проксирования
