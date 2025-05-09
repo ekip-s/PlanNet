@@ -41,6 +41,7 @@ services:
     container_name: keycloak
     command: 
       - start
+      - --import-realm
       - --http-relative-path=/auth
       - --proxy-headers=forwarded
       - --hostname-strict=false
@@ -68,6 +69,8 @@ services:
       KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "false"
       # Логирование
       KC_LOG_LEVEL: DEBUG
+    volumes:
+      - ./realm-config.json:/opt/keycloak/data/import/realm-config.json  
     restart: always 
     networks: 
       - keycloak-db-network  
