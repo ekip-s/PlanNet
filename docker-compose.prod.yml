@@ -39,7 +39,7 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:26.1.4
     container_name: keycloak
-    command: ["start", "--verbose"]
+    command: ["start"]
     environment:
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://keycloak-db:5432/${POSTGRES_DB}
@@ -47,6 +47,10 @@ services:
       KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      # HTTP/HTTPS (ключевые изменения!)
+      KC_HTTP_ENABLED: "true"
+      KC_HTTPS_CERTIFICATE_FILE: ""
+      KC_HTTPS_CERTIFICATE_KEY_FILE: ""
       # Хосты и прокси
       KC_HOSTNAME: darkt.ru
       KC_HOSTNAME_ADMIN: https://darkt.ru/auth
@@ -57,8 +61,7 @@ services:
       KC_HOSTNAME_STRICT_HTTPS: "false"
       KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "true"
       # Логирование
-      KC_LOG_LEVEL: INFO
-      QUARKUS_LOG_LEVEL: DEBUG    
+      KC_LOG_LEVEL: INFO   
 
 volumes:
   cert_data:
