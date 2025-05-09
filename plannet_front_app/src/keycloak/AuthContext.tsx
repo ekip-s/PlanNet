@@ -29,98 +29,126 @@ interface AuthContextType {
     getUserId: () => string | null;
     getUsername: () => string | null;
     getUserRoles: () => string[];
+    login: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
-                                                                          children,
-                                                                      }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
+    const [authCheckCompleted, setAuthCheckCompleted] = useState(false);
     const isInitialized = useRef(false);
-    const tokenRefreshInterval = useRef<number | undefined>(undefined); // Для хранения интервала обновления токена
+    const tokenRefreshInterval = useRef<number | undefined>(undefined);
+
+    const updateUserData = useCallback(() => {
+        const userData: User = {
+            id: keycloak.subject || '',
+            username: keycloak.tokenParsed?.preferred_username || '',
+            email: keycloak.tokenParsed?.email || '',
+            firstName: keycloak.tokenParsed?.given_name || '',
+            lastName: keycloak.tokenParsed?.family_name || '',
+            token: keycloak.token || '',
+            roles: keycloak.tokenParsed?.realm_access?.roles || [],
+        };
+        setUser(userData);
+        setIsAuthenticated(true);
+    }, []);
+
+    const logout = useCallback(() => {
+        setLoading(true);
+        keycloak.logout().finally(() => {
+            setIsAuthenticated(false);
+            setUser(null);
+            setLoading(false);
+        });
+    }, []);
 
     useEffect(() => {
         if (!isInitialized.current) {
             isInitialized.current = true;
 
-            keycloak
-                .init({ onLoad: 'login-required' })
-                .then((authenticated) => {
+            const initializeKeycloak = async () => {
+                try {
+                    setLoading(true);
+                    const authenticated = await keycloak.init({
+                        onLoad: 'check-sso',
+                        pkceMethod: 'S256'
+                    });
+
                     if (authenticated) {
-                        const updateUserData = () => {
-                            const userData: User = {
-                                id: keycloak.subject || '',
-                                username: keycloak.tokenParsed?.preferred_username || '',
-                                email: keycloak.tokenParsed?.email || '',
-                                firstName: keycloak.tokenParsed?.given_name || '',
-                                lastName: keycloak.tokenParsed?.family_name || '',
-                                token: keycloak.token || '',
-                                roles: keycloak.tokenParsed?.realm_access?.roles || [],
-                            };
-                            setUser(userData);
-                        };
-
-                        // Первоначальная установка данных пользователя
                         updateUserData();
-                        setIsAuthenticated(true);
-
-                        // Настройка периодического обновления токена
-                        tokenRefreshInterval.current = window.setInterval(() => {
-                            keycloak
-                                .updateToken(70) // Обновить если осталось меньше 70 секунд
-                                .then((refreshed) => {
+                        keycloak.onTokenExpired = () => {
+                            keycloak.updateToken(30)
+                                .then(refreshed => {
                                     if (refreshed) {
-                                        console.log('Token refreshed');
-                                        updateUserData(); // Обновляем данные пользователя с новым токеном
+                                        updateUserData();
+                                        console.log('Token auto-refreshed');
                                     }
                                 })
-                                .catch((error) => {
-                                    console.error('Failed to refresh token:', error);
-                                    logout(); // При ошибке обновления разлогиниваем
-                                });
-                        }, 60000); // Проверка каждую минуту
+                                .catch(logout);
+                        };
+
+                        tokenRefreshInterval.current = window.setInterval(() => {
+                            keycloak.updateToken(70)
+                                .then(refreshed => {
+                                    if (refreshed) {
+                                        updateUserData();
+                                        console.log('Token refreshed by interval');
+                                    }
+                                })
+                                .catch(logout);
+                        }, 60000);
                     }
-                    setLoading(false);
-                })
-                .catch((error) => {
+                } catch (error) {
                     console.error('Keycloak init error:', error);
+                } finally {
                     setLoading(false);
-                });
+                    setAuthCheckCompleted(true);
+                }
+            };
+
+            initializeKeycloak();
+
+            keycloak.onAuthSuccess = () => {
+                console.log('Auth Success');
+                updateUserData();
+                setLoading(false);
+            };
+
+            keycloak.onAuthError = () => {
+                console.error('Auth Error');
+                setLoading(false);
+            };
         }
 
-        // Очистка при размонтировании
         return () => {
             if (tokenRefreshInterval.current) {
                 clearInterval(tokenRefreshInterval.current);
             }
         };
-    }, []);
+    }, [updateUserData, logout]);
 
-    const logout = () => {
-        if (tokenRefreshInterval.current) {
-            clearInterval(tokenRefreshInterval.current);
+    const login = useCallback(async () => {
+        try {
+            setLoading(true);
+            await keycloak.login();
+        } catch (error) {
+            console.error('Login failed:', error);
+            setLoading(false);
         }
-        keycloak.logout();
-        setIsAuthenticated(false);
-        setUser(null);
-    };
+    }, []);
 
     const getToken = useCallback(() => user?.token || null, [user]);
     const getUserId = useCallback(() => user?.id || null, [user]);
     const getUsername = useCallback(() => user?.firstName || null, [user]);
     const getUserRoles = useCallback(() => user?.roles || [], [user]);
 
-    if (loading) {
-        return <Loading />;
-    }
-
     return (
         <AuthContext.Provider
             value={{
-                isAuthenticated,
+                isAuthenticated: authCheckCompleted && isAuthenticated,
                 user,
                 keycloak,
                 logout,
@@ -129,9 +157,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
                 getUserId,
                 getUsername,
                 getUserRoles,
+                login,
             }}
         >
-            {children}
+            {loading ? <Loading /> : children}
         </AuthContext.Provider>
     );
 };
