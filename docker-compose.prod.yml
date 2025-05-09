@@ -42,28 +42,23 @@ services:
     command: ["start", "--verbose"]
     environment:
       KC_DB: postgres
-      KC_DB_URL_DATABASE: ${POSTGRES_DB}
+      KC_DB_URL: jdbc:postgresql://keycloak-db:5432/${POSTGRES_DB}
       KC_DB_USERNAME: ${POSTGRES_USER}
       KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
-      KC_DB_URL_HOST: keycloak-db
-      KC_DB_URL_PORT: 5432
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
-      KC_HTTP_ENABLED: "true"
+      # Хосты и прокси
+      KC_HOSTNAME: darkt.ru
+      KC_HOSTNAME_ADMIN: https://darkt.ru/auth
+      KC_PROXY: edge
+      KC_PROXY_HEADERS: forwarded 
+      # Оптимизация
+      KC_HOSTNAME_STRICT: "false"
       KC_HOSTNAME_STRICT_HTTPS: "false"
       KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "true"
-      KC_HOSTNAME: "darkt.ru"
-      KC_HOSTNAME_ADMIN: "https://darkt.ru"
-      KC_HTTP_RELATIVE_PATH: /auth
-      KC_PROXY_HEADERS: forwarded
-      KC_HOSTNAME_STRICT: "false"
-      KC_PROXY: edge
-    depends_on:
-      - keycloak-db
-    restart: always
-    networks: 
-      - keycloak-db-network
-      - keycloak-main-network     
+      # Логирование
+      KC_LOG_LEVEL: INFO
+      QUARKUS_LOG_LEVEL: DEBUG    
 
 volumes:
   cert_data:
