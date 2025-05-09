@@ -43,8 +43,8 @@ services:
       - start
       - --http-relative-path=/auth
       - --proxy-headers=forwarded
-      - --http-enabled=true
       - --hostname-strict=false
+      - --hostname=https://darkt.ru/auth
     environment:
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://keycloak-db:5432/${POSTGRES_DB}
