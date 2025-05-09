@@ -1,18 +1,27 @@
 :root {
     --header-color: #373739;
     --app-main-color: #565658;
-    --color-shadow: rgba(145, 144, 144, 0.52);
+    --color-shadow: rgba(205, 205, 205, 0.18);
 
-    --shadow-sm: 0 2px 4px var(--color-shadow);
-    --shadow-md: 0 4px 8px var(--color-shadow);
-    --shadow-lg: 0 8px 16px var(--color-shadow);
-    --shadow-accent: 0 4px 12px rgba(237, 211, 86, 0.93);
+    --shadow-sm: 1px 1px 7px 1px var(--color-shadow);
+    --shadow-md: 1 4px 8px var(--color-shadow);
+    --shadow-lg: 1 8px 16px var(--color-shadow);
+    --shadow-accent: 1 4px 12px rgba(237, 211, 86, 0.93);
 
     --text: white;
     --side-text: rgba(204, 204, 204, 0.8);
     --accent-text: rgba(250, 216, 59, 0.93);
 
+    --widget-bg: #F8FAFC;
+    --widget-border: #909297;
+    --widget-radius: 12px;
+
+    --surface-bg: #FFFFFF;
+    --text-accent: #2A6EF0;
+
     --indentation: 5%;
+    --btn-radius: 7px;
+    --btn-radius-small: 4px;
 }
 
 * {

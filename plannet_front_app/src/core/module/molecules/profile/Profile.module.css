@@ -1,0 +1,84 @@
+.profileBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 3px;
+    margin: 5px;
+    border-color: var(--widget-border);
+    border-radius: var(--btn-radius);
+    background-color: var(--app-main-color);
+    box-shadow: var(--shadow-sm);
+}
+
+.profileContainer {
+    position: relative;
+    display: inline-block;
+}
+
+.profileBtn:hover {
+    opacity: 0.8;
+}
+
+.username {
+    margin: 0;
+    padding: 1px;
+    font-size: 1rem;
+    color: var(--text);
+}
+
+.profileMenu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: var(--header-color);
+    border-radius: var(--btn-radius);
+    border-color: var(--widget-border);
+    box-shadow: var(--shadow-md);
+    padding: 3px;
+    margin-top: 8px;
+    min-width: 100px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition:
+            opacity 0.2s ease,
+            transform 0.2s ease,
+            visibility 0.2s;
+    z-index: 100;
+}
+
+.menuVisible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.menuItem hr {
+    margin-top: 5px;
+}
+
+.logout {
+    padding: 2px;
+    color: var(--text-accent);
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-size: 16px;
+}
+
+.node {
+    padding: 2px;
+    cursor: pointer;
+    border-radius: var(--btn-radius-small);
+    box-shadow: var(--shadow-sm);
+    background: var(--widget-bg);
+    border-color: var(--widget-border);
+    font-size: 16px;
+    margin: 3px;
+    width: 95%;
+}
+
+.logout:hover {
+    opacity: 0.8;
+}
