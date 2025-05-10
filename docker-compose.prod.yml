@@ -23,6 +23,38 @@ services:
       - main-network
       - keycloak-main-network
 
+  task_master_db:
+    image: postgres:16.2
+    container_name: task_master_db
+    environment:
+      - POSTGRES_DB=${TASK_MASTER_DB}
+      - POSTGRES_USER=${TASK_MASTER_POSTGRES_USER}
+      - POSTGRES_PASSWORD=${TASK_MASTER_POSTGRES_PASSWORD}
+    volumes:
+      - postgresdata_task:/var/lib/postgresql/data
+    restart: always 
+    networks: 
+      - task-master-network    
+
+  task_master:
+    build:
+      context: .
+      dockerfile: task_master/master_data/Dockerfile
+    depends_on:
+      - progressify_database
+    environment:
+      - ENV=${ENV}
+      - TASK_MASTER_PORT=${TASK_MASTER_PORT}
+      - TASK_MASTER_DB=${TASK_MASTER_DB}
+      - TASK_MASTER_POSTGRES_USER=${TASK_MASTER_POSTGRES_USER}
+      - TASK_MASTER_POSTGRES_PASSWORD=${TASK_MASTER_POSTGRES_PASSWORD}
+      - SWAGGER_CLIENT_SECRET=${SWAGGER_CLIENT_SECRET}
+    networks:
+      - main-network
+      - keycloak-main-network
+      - task-master-network
+    restart: always     
+
   keycloak-db:
     image: postgres:16.2
     container_name: keycloak_db
@@ -79,6 +111,7 @@ services:
 volumes:
   cert_data:
   postgresdata:  
+  postgresdata_task:  
 
 networks:
   main-network:
@@ -88,3 +121,5 @@ networks:
   keycloak-main-network:
     driver: bridge  
     internal: false
+  task-master-network:
+    driver: bridge  
