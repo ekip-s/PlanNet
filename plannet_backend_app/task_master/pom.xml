@@ -6,7 +6,7 @@
     <parent>
         <groupId>ru.darkt</groupId>
         <artifactId>plannet_backend_app</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
 
     <artifactId>task_master</artifactId>
@@ -52,7 +52,7 @@
         <dependency>
             <groupId>ru.darkt</groupId>
             <artifactId>exception_data</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
