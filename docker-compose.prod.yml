@@ -41,7 +41,7 @@ services:
       context: .
       dockerfile: task_master/master_data/Dockerfile
     depends_on:
-      - progressify_database
+      - task_master_db
     environment:
       - ENV=${ENV}
       - TASK_MASTER_PORT=${TASK_MASTER_PORT}
