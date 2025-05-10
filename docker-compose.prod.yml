@@ -39,7 +39,7 @@ services:
   task_master:
     build:
       context: .
-      dockerfile: task_master/master_data/Dockerfile
+      dockerfile: plannet_backend_app/task_master/Dockerfile
     depends_on:
       - task_master_db
     environment:
