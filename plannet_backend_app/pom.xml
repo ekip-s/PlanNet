@@ -18,6 +18,7 @@
 
     <modules>
         <module>exception_data</module>
+        <module>task_master</module>
     </modules>
 
     <properties>
