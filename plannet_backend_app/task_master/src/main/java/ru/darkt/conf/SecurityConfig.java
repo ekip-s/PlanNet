@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -43,48 +44,68 @@ public class SecurityConfig {
             if (realmAccess.get("roles") instanceof Collection) {
                 Collection<String> roles = (Collection<String>) realmAccess.get("roles");
                 return roles.stream()
-                        .map(roleName -> "ROLE_" + roleName)
+                        .map(role -> "ROLE_" + role)
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
-            } else {
-                return Collections.emptyList();
             }
+            return Collections.emptyList();
         });
         return converter;
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-
-        configuration.setAllowedOrigins(List.of("http://localhost:8081", "http://localhost:5173", "http://darkt.ru", "https://darkt.ru"));
-        configuration.setAllowedMethods(List.of("GET","POST", "PATCH", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin"));
-        configuration.setExposedHeaders(List.of("Authorization", "Content-Type"));
+        CorsConfiguration cfg = new CorsConfiguration();
+        cfg.setAllowedOrigins(List.of(
+                "http://localhost:8081",
+                "http://localhost:5173",
+                "http://darkt.ru",
+                "https://darkt.ru"
+        ));
+        cfg.setAllowedMethods(List.of("GET","POST","PATCH","DELETE","OPTIONS"));
+        cfg.setAllowedHeaders(List.of(
+                "Authorization","Content-Type","X-Requested-With","Accept","Origin"
+        ));
+        cfg.setExposedHeaders(List.of("Authorization","Content-Type"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+        source.registerCorsConfiguration("/**", cfg);
         return source;
     }
 
+    /**
+     * Решение A: полностью игнорируем Swagger-эндпоинты из цепочки Spring Security
+     */
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(
-                                "/swagger-ui/**",
-                                "/v3/api-docs/**",
-                                "/swagger-ui.html",
-                                "/api-docs/**",
-                                "/swagger-ui.html",
-                                "/swagger-resources/**"
-                        ).permitAll()
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return web -> web.ignoring().requestMatchers(
+                "/swagger-ui/**",
+                "/swagger-ui.html",
+                "/api-docs/**",
+                "/api-docs/swagger-config",
+                "/v3/api-docs/**",
+                "/swagger-resources/**"
+        );
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                // все запросы, кроме игнорируемых выше, требуют авторизации
+                .authorizeHttpRequests(auth -> auth
                         .anyRequest().authenticated()
                 )
                 .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(sm -> sm
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
                 .cors(Customizer.withDefaults())
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
-                .build();
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(jwt -> jwt
+                                .jwtAuthenticationConverter(jwtAuthenticationConverter())
+                        )
+                );
+
+        return http.build();
     }
 }
