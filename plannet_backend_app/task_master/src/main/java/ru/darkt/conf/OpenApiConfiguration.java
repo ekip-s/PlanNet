@@ -2,6 +2,7 @@ package ru.darkt.conf;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.OAuthFlow;
 import io.swagger.v3.oas.models.security.OAuthFlows;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
@@ -23,6 +24,10 @@ public class OpenApiConfiguration {
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
+                .info(new Info()
+                        .title("Task Master API")
+                        .version("1.0")
+                        .description("API для управления задачами"))
                 .addSecurityItem(new SecurityRequirement().addList("oauth2"))
                 .components(new Components()
                         .addSecuritySchemes("oauth2", new SecurityScheme()
