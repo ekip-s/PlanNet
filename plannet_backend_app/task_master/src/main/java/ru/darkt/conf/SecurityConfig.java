@@ -73,9 +73,6 @@ public class SecurityConfig {
         return source;
     }
 
-    /**
-     * Решение A: полностью игнорируем Swagger-эндпоинты из цепочки Spring Security
-     */
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return web -> web.ignoring().requestMatchers(
