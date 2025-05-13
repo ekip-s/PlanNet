@@ -29,7 +29,6 @@ public class OpenApiConfiguration {
         return new OpenAPI()
                 .servers(List.of(new Server().url(serverUrl)))
                 .info(new Info().title("Task Master API").version("1.0").description("API для управления задачами"))
-                .addSecurityItem(new SecurityRequirement().addList("oauth2"))
                 .components(new Components()
                         .addSecuritySchemes("oauth2", new SecurityScheme()
                                 .type(SecurityScheme.Type.OAUTH2)
