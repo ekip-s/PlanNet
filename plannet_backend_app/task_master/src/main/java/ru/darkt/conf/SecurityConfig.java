@@ -3,6 +3,7 @@ package ru.darkt.conf;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -12,6 +13,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
 import org.springframework.security.oauth2.server.resource.web.DefaultBearerTokenResolver;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
@@ -32,64 +34,88 @@ public class SecurityConfig {
     @Value("${spring.security.oauth2.resourceserver.jwt.jwk-set-uri}")
     private String jwkSetUri;
 
+    // JWT Decoder
     @Bean
     public JwtDecoder jwtDecoder() {
         return NimbusJwtDecoder.withJwkSetUri(jwkSetUri).build();
     }
 
+    // Конвертация ролей из claim realm_access.roles -> ROLE_...
     private JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
         converter.setJwtGrantedAuthoritiesConverter(jwt -> {
             Map<String, Object> realmAccess = jwt.getClaimAsMap("realm_access");
-            if (realmAccess.get("roles") instanceof Collection) {
-                Collection<String> roles = (Collection<String>) realmAccess.get("roles");
-                return roles.stream()
-                        .map(roleName -> "ROLE_" + roleName)
-                        .map(SimpleGrantedAuthority::new)
+            if (realmAccess.get("roles") instanceof Collection<?>) {
+                Collection<?> roles = (Collection<?>) realmAccess.get("roles");
+                return ((Collection<String>) roles).stream()
+                        .map(r -> new SimpleGrantedAuthority("ROLE_" + r))
                         .collect(Collectors.toList());
-            } else {
-                return Collections.emptyList();
             }
+            return Collections.emptyList();
         });
         return converter;
     }
 
+    // CORS-конфиг
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-
-        configuration.setAllowedOrigins(List.of("http://localhost:8081", "http://localhost:5173", "http://darkt.ru", "https://darkt.ru", "http://task_master:8081"));
-        configuration.setAllowedMethods(List.of("GET","POST", "PATCH", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin"));
-        configuration.setExposedHeaders(List.of("Authorization", "Content-Type"));
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
+        CorsConfiguration cfg = new CorsConfiguration();
+        cfg.setAllowedOrigins(List.of(
+                "http://localhost:8081",
+                "http://localhost:5173",
+                "http://darkt.ru",
+                "https://darkt.ru",
+                "http://task_master:8081"
+        ));
+        cfg.setAllowedMethods(List.of("GET","POST","PATCH","DELETE","OPTIONS"));
+        cfg.setAllowedHeaders(List.of(
+                "Authorization",
+                "Content-Type",
+                "X-Requested-With",
+                "Accept",
+                "Origin"
+        ));
+        cfg.setExposedHeaders(List.of("Authorization", "Content-Type"));
+        UrlBasedCorsConfigurationSource src = new UrlBasedCorsConfigurationSource();
+        src.registerCorsConfiguration("/**", cfg);
+        return src;
     }
 
+    // 1. Цепочка для Swagger/OpenAPI — без аутентификации
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(
-                                "/swagger-ui/index.html",
-                                "/swagger-ui/**",
-                                "/v3/api-docs",
-                                "/v3/api-docs/",
-                                "/v3/api-docs/**"
-                        ).permitAll()
+    @Order(1)
+    public SecurityFilterChain swaggerSecurityChain(HttpSecurity http) throws Exception {
+        http
+                .securityMatcher("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
+                .authorizeHttpRequests(auth -> auth
+                        .anyRequest().permitAll()
+                )
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(Customizer.withDefaults());
+        return http.build();
+    }
+
+    // 2. Основная цепочка для всего остального — с JWT
+    @Bean
+    @Order(2)
+    public SecurityFilterChain apiSecurityChain(HttpSecurity http) throws Exception {
+        http
+                .securityMatcher("/**")
+                .authorizeHttpRequests(auth -> auth
                         .anyRequest().authenticated()
                 )
                 .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(sess -> sess
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
                 .cors(Customizer.withDefaults())
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt
                                 .jwtAuthenticationConverter(jwtAuthenticationConverter())
                         )
                         .bearerTokenResolver(new DefaultBearerTokenResolver())
-                )
-                .build();
+                        .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
+                );
+        return http.build();
     }
 }
