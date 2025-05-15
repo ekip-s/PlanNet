@@ -20,7 +20,7 @@ public class TaskController {
             description = "Тест"
     )
     @GetMapping({"", "/"})
-    public void getAllTasks() {
-
+    public String getAllTasks() {
+      return "Успех";
     }
 }
