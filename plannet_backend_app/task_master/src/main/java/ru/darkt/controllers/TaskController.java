@@ -19,7 +19,7 @@ public class TaskController {
             summary = "Тест",
             description = "Тест"
     )
-    @GetMapping({"", "/"})
+    @GetMapping
     public String getAllTasks() {
       return "Успех";
     }
