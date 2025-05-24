@@ -19,6 +19,7 @@
     <modules>
         <module>exception_data</module>
         <module>task_master</module>
+        <module>groups_manager</module>
     </modules>
 
     <properties>
