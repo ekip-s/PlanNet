@@ -34,24 +34,30 @@ public class SecurityConfig {
     @Value("${spring.security.oauth2.resourceserver.jwt.jwk-set-uri}")
     private String jwkSetUri;
 
-    // JWT Decoder
     @Bean
     public JwtDecoder jwtDecoder() {
         return NimbusJwtDecoder.withJwkSetUri(jwkSetUri).build();
     }
 
-    // Конвертация ролей из claim realm_access.roles -> ROLE_...
     private JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
         converter.setJwtGrantedAuthoritiesConverter(jwt -> {
             Map<String, Object> realmAccess = jwt.getClaimAsMap("realm_access");
-            if (realmAccess.get("roles") instanceof Collection<?>) {
-                Collection<?> roles = (Collection<?>) realmAccess.get("roles");
-                return ((Collection<String>) roles).stream()
-                        .map(r -> new SimpleGrantedAuthority("ROLE_" + r))
-                        .collect(Collectors.toList());
+            if (realmAccess == null) {
+                return Collections.emptyList();
             }
-            return Collections.emptyList();
+
+            Object rolesObject = realmAccess.get("roles");
+            if (!(rolesObject instanceof Collection<?>)) {
+                return Collections.emptyList();
+            }
+
+            Collection<?> roles = (Collection<?>) rolesObject;
+            return roles.stream()
+                    .filter(String.class::isInstance)
+                    .map(r -> "ROLE_" + r)
+                    .map(SimpleGrantedAuthority::new)
+                    .collect(Collectors.toList());
         });
         return converter;
     }
@@ -100,7 +106,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // 2. Основная цепочка для всего остального — с JWT
     @Bean
     @Order(2)
     public SecurityFilterChain apiSecurityChain(HttpSecurity http) throws Exception {

@@ -1,13 +1,15 @@
 package ru.darkt.models;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UuidGenerator;
-
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -17,24 +19,17 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "group_services", indexes = {
-        @Index(name = "idx_group_services_group", columnList = "group_id"),
-        @Index(name = "idx_group_services_name", columnList = "name")
-})
-public class GroupService {
+@Table(name = "service")
+public class Service {
 
     @Id
     @UuidGenerator(style = UuidGenerator.Style.RANDOM)
     private UUID id;
 
-    @Column(nullable = false)
-    private short name;
-
-    @ManyToOne
-    @JoinColumn(name = "group_id", nullable = false)
-    private Group group;
-
     @CreationTimestamp
-    @Column(nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    @Column(nullable = false, unique = true, length = 50)
+    private String name;
 }

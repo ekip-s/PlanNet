@@ -1,13 +1,21 @@
-package ru.darkt.models;
+package ru.darkt.models.group_user;
 
 import jakarta.persistence.Embeddable;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Embeddable
-class GroupUserKey implements Serializable {
+public class GroupUserKey implements Serializable {
     private UUID groupId;
     private UUID userId;
 

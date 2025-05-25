@@ -1,4 +1,4 @@
-package ru.darkt.models;
+package ru.darkt.models.group_service;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,9 +7,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UuidGenerator;
+import ru.darkt.models.group.Group;
+
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 import java.util.UUID;
 
 @Getter
@@ -17,32 +18,21 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "groups", indexes = @Index(name = "idx_groups_owner", columnList = "owner"))
-public class Group {
+@Table(name = "group_services")
+public class GroupService {
 
     @Id
     @UuidGenerator(style = UuidGenerator.Style.RANDOM)
     private UUID id;
 
     @Column(nullable = false)
-    private UUID owner;
+    private short name;
+
+    @ManyToOne
+    @JoinColumn(name = "group_id", nullable = false)
+    private Group group;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
-
-    @Column(nullable = false, length = 50)
-    private String name;
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Group group = (Group) o;
-        return Objects.equals(id, group.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
 }

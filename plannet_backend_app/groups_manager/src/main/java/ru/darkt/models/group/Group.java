@@ -1,4 +1,4 @@
-package ru.darkt.models;
+package ru.darkt.models.group;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UuidGenerator;
-import ru.darkt.models.group.Group;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -18,29 +17,30 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "invitations", indexes = @Index(name = "idx_invitations_group", columnList = "group_id"))
-public class Invitation {
+@Table(name = "groups")
+public class Group {
 
     @Id
     @UuidGenerator(style = UuidGenerator.Style.RANDOM)
     private UUID id;
 
-    @Column(nullable = false, unique = true, length = 50)
-    private String code;
-
     @CreationTimestamp
-    @Column(nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @ManyToOne
-    @JoinColumn(name = "group_id", nullable = false)
-    private Group group;
+    @Column(nullable = false, length = 50)
+    private String name;
+
+    public Group(String name) {
+        this.createdAt = LocalDateTime.now();
+        this.name = name;
+    }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        Invitation that = (Invitation) o;
-        return Objects.equals(id, that.id);
+        Group group = (Group) o;
+        return Objects.equals(id, group.id);
     }
 
     @Override

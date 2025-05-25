@@ -33,8 +33,6 @@ public class OpenApiConfiguration {
                         .version("1.0")
                         .description("API для управления группами")
                 )
-                // <-- вот эта строка делает все endpoints "lockable" и заставляет UI
-                //    автоматически добавлять токен в Authorization заголовок
                 .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
                 .components(new Components()
                         .addSecuritySchemes(securitySchemeName, new SecurityScheme()
