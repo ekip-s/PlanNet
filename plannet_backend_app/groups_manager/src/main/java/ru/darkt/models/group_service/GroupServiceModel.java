@@ -6,9 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UuidGenerator;
-import ru.darkt.models.group.Group;
-
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -19,20 +16,17 @@ import java.util.UUID;
 @AllArgsConstructor
 @Entity
 @Table(name = "group_services")
-public class GroupService {
+public class GroupServiceModel {
 
-    @Id
-    @UuidGenerator(style = UuidGenerator.Style.RANDOM)
-    private UUID id;
-
-    @Column(nullable = false)
-    private short name;
-
-    @ManyToOne
-    @JoinColumn(name = "group_id", nullable = false)
-    private Group group;
+    @EmbeddedId
+    private GroupServiceKey id;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    public GroupServiceModel(UUID groupId, UUID serviceId) {
+        this.id = new GroupServiceKey(groupId, serviceId);
+        this.createdAt = LocalDateTime.now();
+    }
 }
