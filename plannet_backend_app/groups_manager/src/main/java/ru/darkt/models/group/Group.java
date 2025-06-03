@@ -7,8 +7,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UuidGenerator;
+import ru.darkt.models.group_service.GroupServiceModel;
+import ru.darkt.models.group_user.GroupUser;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -34,6 +38,10 @@ public class Group {
     public Group(String name) {
         this.createdAt = LocalDateTime.now();
         this.name = name;
+    }
+
+    public Group(UUID id) {
+        this.id = id;
     }
 
     @Override

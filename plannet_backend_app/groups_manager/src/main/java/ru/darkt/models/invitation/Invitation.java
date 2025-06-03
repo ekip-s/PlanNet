@@ -1,4 +1,4 @@
-package ru.darkt.models;
+package ru.darkt.models.invitation;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -35,6 +35,12 @@ public class Invitation {
     @ManyToOne
     @JoinColumn(name = "group_id", nullable = false)
     private Group group;
+
+    public Invitation(String code, UUID groupId) {
+        this.code = code;
+        this.createdAt = LocalDateTime.now();
+        this.group = new Group(groupId);
+    }
 
     @Override
     public boolean equals(Object o) {

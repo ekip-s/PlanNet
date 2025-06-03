@@ -1,4 +1,4 @@
-package ru.darkt.models;
+package ru.darkt.models.service;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

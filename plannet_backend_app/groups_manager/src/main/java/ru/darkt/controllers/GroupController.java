@@ -6,8 +6,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.darkt.models.group.CreateGroupRequest;
+import ru.darkt.models.group.GroupLightResponse;
 import ru.darkt.services.group.GroupService;
 
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -20,6 +22,16 @@ public class GroupController {
     private final GroupService groupService;
 
     @Operation(
+            summary = "Получить свои группы",
+            description = "Возвращает группы пользователя"
+    )
+    @GetMapping("/service/{serviceName}")
+    public List<GroupLightResponse> getGroupList(@PathVariable String serviceName) {
+        log.info("GET: GroupController getGroupList, параметры: {}", serviceName);
+        return groupService.getGroupList(serviceName);
+    }
+
+    @Operation(
             summary = "Создать группу",
             description = "Создает группу, делает создателя owner-ом"
     )
@@ -28,27 +40,14 @@ public class GroupController {
         log.info("POST: GroupController addNewGroup, параметры: {}", createGroupRequest);
         return groupService.addNewGroup(createGroupRequest);
     }
-    //создай группу -> и того, кто написал назначим owner-ом и участником группы (указываем сервисы)
 
     @Operation(
             summary = "Удалить группу",
             description = "Удалить группу может только owner, если пользователь не owner -> он может выйти из группы"
     )
-    @DeleteMapping
-    public void deleteGroup() {
-
+    @DeleteMapping("/{groupId}")
+    public void deleteGroup(@PathVariable UUID groupId) {
+        log.info("DELETE: GroupController deleteGroup, параметры: {}", groupId);
+        groupService.deleteGroup(groupId);
     }
-    //удалить группу и всех участников, удалять может только owner
-
-
-
-    //получить свои группы лайт (с фильром по сервису)
-    // получить тяжелую группу;
-    //проверка, что пользователь, участник группы
-    //пользователь может выйти из группы (проверить таски при выходе из группы и изменить их)
-
-    //добавить сервис
-    //удалить сервис
-
-    //создание приглашения для группы
 }
