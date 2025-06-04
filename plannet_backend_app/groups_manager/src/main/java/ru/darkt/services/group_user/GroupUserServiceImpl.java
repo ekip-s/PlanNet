@@ -11,6 +11,7 @@ import ru.darkt.models.group_user.GroupUser;
 import ru.darkt.models.group_user.GroupUserResponse;
 import ru.darkt.repository.GroupUserRepository;
 import ru.darkt.services.TokenService;
+import ru.darkt.services.invitation.InvitationService;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,15 +24,18 @@ public class GroupUserServiceImpl implements GroupUserService {
     private final GroupUserRepository groupUserRepository;
     private final TokenService tokenService;
     private final GroupUserMapper groupUserMapper;
+    private final InvitationService invitationService;
 
     @Autowired
-    public GroupUserServiceImpl(GroupUserRepository groupUserRepository, TokenService tokenService, GroupUserMapper groupUserMapper) {
+    public GroupUserServiceImpl(GroupUserRepository groupUserRepository, TokenService tokenService, GroupUserMapper groupUserMapper, InvitationService invitationService) {
         this.groupUserRepository = groupUserRepository;
         this.tokenService = tokenService;
         this.groupUserMapper = groupUserMapper;
+        this.invitationService = invitationService;
     }
 
     @Override
+    @Transactional
     public void newGroupUser(UUID groupId, UUID userId, String userLogin, GroupRole role) {
         groupUserRepository.save(new GroupUser(groupId, userId, userLogin, role));
     }
@@ -64,5 +68,14 @@ public class GroupUserServiceImpl implements GroupUserService {
                 .filter(e -> e.getRole() == GroupRole.OWNER)
                 .findFirst()
                 .get();
+    }
+
+    @Override
+    @Transactional
+    public void joinGroup(String code) {
+        newGroupUser(invitationService.codeVerification(code),
+                tokenService.getCurrentUserId(),
+                tokenService.getCurrentUserLogin(),
+                GroupRole.USER);
     }
 }

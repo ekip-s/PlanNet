@@ -4,10 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.darkt.models.service.ServiceResponse;
 import ru.darkt.services.group_service.GroupServiceLink;
 
@@ -32,6 +29,24 @@ public class GroupServiceController {
         log.info("GET: GroupServiceController getGroupServiceList, параметры: {}", groupId);
         return groupServiceLink.getGroupServiceList(groupId);
     }
-    //убрать сервис из группы
-    //добавить сервис в группу
+
+    @Operation(
+            summary = "Добавить сервис в группу",
+            description = "Добавить может только owner"
+    )
+    @PostMapping
+    public void addServiceToGroup(@PathVariable UUID groupId, @RequestParam String service) {
+        log.info("POST: GroupServiceController addServiceToGroup, параметры: {} {}", groupId, service);
+        groupServiceLink.addServiceToGroup(groupId, service);
+    }
+
+    @Operation(
+            summary = "Удалить сервис из группы",
+            description = "Удалить может только owner"
+    )
+    @DeleteMapping
+    public void deleteServiceToGroup(@PathVariable UUID groupId, @RequestParam String service) {
+        log.info("DELETE: GroupServiceController deleteServiceToGroup, параметры: {} {}", groupId, service);
+        groupServiceLink.deleteServiceToGroup(groupId, service);
+    }
 }

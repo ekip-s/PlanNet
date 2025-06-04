@@ -11,4 +11,5 @@ public interface GroupUserService {
     void memberVerification(UUID groupId);
     List<GroupUserResponse> getGroupMembers(UUID groupId);
     GroupUserResponse getOwner(UUID groupId);
+    void joinGroup(String code);
 }
