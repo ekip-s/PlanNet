@@ -3,18 +3,17 @@ package ru.darkt.services.group;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.darkt.ForbiddenException;
 import ru.darkt.mappers.group.GroupMapper;
 import ru.darkt.models.group.CreateGroupRequest;
 import ru.darkt.models.group.Group;
 import ru.darkt.models.group.GroupLightResponse;
 import ru.darkt.models.group_service.GroupServiceModel;
 import ru.darkt.models.group_user.GroupRole;
-import ru.darkt.models.group_user.GroupUserResponse;
 import ru.darkt.repository.GroupRepository;
 import ru.darkt.repository.GroupServiceRepository;
 import ru.darkt.services.TokenService;
 import ru.darkt.services.group_user.GroupUserService;
+import ru.darkt.services.group_permission.GroupPermission;
 
 
 import java.util.ArrayList;
@@ -28,17 +27,21 @@ public class GroupServiceImpl implements GroupService {
 
     private final TokenService tokenService;
     private final GroupMapper groupMapper;
+    private final GroupPermission groupPermissionService;
     private final GroupRepository groupRepository;
     private final GroupUserService groupUserService;
     private final GroupServiceRepository groupServiceRepository;
 
     @Autowired
-    public GroupServiceImpl(TokenService tokenService, GroupMapper groupMapper,
+    public GroupServiceImpl(TokenService tokenService,
+                            GroupMapper groupMapper,
+                            GroupPermission groupPermissionService,
                             GroupRepository groupRepository,
                             GroupUserService groupUserService,
                             GroupServiceRepository groupServiceRepository) {
         this.tokenService = tokenService;
         this.groupMapper = groupMapper;
+        this.groupPermissionService = groupPermissionService;
         this.groupRepository = groupRepository;
         this.groupUserService = groupUserService;
         this.groupServiceRepository = groupServiceRepository;
@@ -70,13 +73,8 @@ public class GroupServiceImpl implements GroupService {
     @Override
     @Transactional
     public void deleteGroup(UUID groupId) {
-        GroupUserResponse groupUser = groupUserService.getOwner(groupId);
-
-        if(groupUser.getUserId() == tokenService.getCurrentUserId()) {
-            groupRepository.deleteById(groupId);
-        } else {
-            throw new ForbiddenException("Удалить группу может только владелец", "Запрещено");
-        }
+        groupPermissionService.validateOwnership(groupId);
+        groupRepository.deleteById(groupId);
     }
 
     @Transactional

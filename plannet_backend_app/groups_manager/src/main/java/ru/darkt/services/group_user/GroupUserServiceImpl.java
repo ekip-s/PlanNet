@@ -3,15 +3,17 @@ package ru.darkt.services.group_user;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.darkt.ConflictException;
 import ru.darkt.ForbiddenException;
 import ru.darkt.mappers.group_user.GroupUserMapper;
 import ru.darkt.models.group.Group;
 import ru.darkt.models.group_user.GroupRole;
 import ru.darkt.models.group_user.GroupUser;
+import ru.darkt.models.group_user.GroupUserKey;
 import ru.darkt.models.group_user.GroupUserResponse;
 import ru.darkt.repository.GroupUserRepository;
 import ru.darkt.services.TokenService;
-import ru.darkt.services.invitation.InvitationService;
+import ru.darkt.services.group_permission.GroupPermission;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,14 +26,16 @@ public class GroupUserServiceImpl implements GroupUserService {
     private final GroupUserRepository groupUserRepository;
     private final TokenService tokenService;
     private final GroupUserMapper groupUserMapper;
-    private final InvitationService invitationService;
+    private final GroupPermission groupPermissionService;
 
     @Autowired
-    public GroupUserServiceImpl(GroupUserRepository groupUserRepository, TokenService tokenService, GroupUserMapper groupUserMapper, InvitationService invitationService) {
+    public GroupUserServiceImpl(GroupUserRepository groupUserRepository,
+                                TokenService tokenService,
+                                GroupUserMapper groupUserMapper, GroupPermission groupPermissionService) {
         this.groupUserRepository = groupUserRepository;
         this.tokenService = tokenService;
         this.groupUserMapper = groupUserMapper;
-        this.invitationService = invitationService;
+        this.groupPermissionService = groupPermissionService;
     }
 
     @Override
@@ -62,20 +66,24 @@ public class GroupUserServiceImpl implements GroupUserService {
     }
 
     @Override
-    public GroupUserResponse getOwner(UUID groupId) {
-        return getGroupMembers(groupId)
-                .stream()
-                .filter(e -> e.getRole() == GroupRole.OWNER)
-                .findFirst()
-                .get();
+    @Transactional
+    public void leaveGroup(UUID groupId) {
+        UUID currentUserId = tokenService.getCurrentUserId();
+
+        groupPermissionService.validateNotOwner(groupId);
+        groupUserRepository.deleteById(new GroupUserKey(groupId, currentUserId));
     }
 
     @Override
     @Transactional
-    public void joinGroup(String code) {
-        newGroupUser(invitationService.codeVerification(code),
-                tokenService.getCurrentUserId(),
-                tokenService.getCurrentUserLogin(),
-                GroupRole.USER);
+    public void removeUserFromGroup(UUID groupId, UUID userId) {
+        UUID currentUserId = tokenService.getCurrentUserId();
+        groupPermissionService.validateOwnership(groupId);
+
+        if (groupPermissionService.isGroupOwner(groupId)) {
+            throw new ConflictException("Нельзя удалить владельца группы", "Конфликт");
+        }
+
+        groupUserRepository.deleteById(new GroupUserKey(groupId, userId));
     }
 }

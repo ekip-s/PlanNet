@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.darkt.models.group_user.GroupUserResponse;
 import ru.darkt.services.group_user.GroupUserService;
+import ru.darkt.services.group_invitation_manager.GroupInvitationManager;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,6 +20,7 @@ import java.util.UUID;
 public class GroupUserController {
 
     private final GroupUserService groupUserService;
+    private final GroupInvitationManager groupInvitationManager;
 
     @Operation(
             summary = "Получить пользователей группы",
@@ -47,10 +49,26 @@ public class GroupUserController {
     @PostMapping("/{code}")
     public void joinGroup(@PathVariable String code) {
         log.info("POST: GroupUserController joinGroup, параметры: {}", code);
-        groupUserService.joinGroup(code);
+        groupInvitationManager.joinGroupByCode(code);
     }
 
+    @Operation(
+            summary = "Выйти из группы",
+            description = "owner не может выйти из группы, но может удалить ее"
+    )
+    @DeleteMapping("/{groupId}")
+    public void leaveGroup(@PathVariable UUID groupId) {
+        log.info("DELETE: GroupUserController leaveGroup, параметры: {}", groupId);
+        groupUserService.leaveGroup(groupId);
+    }
 
-    //выйти из группы (владелец не может выйти)
-    //удалить пользователя из группы для владельца;
+    @Operation(
+            summary = "Удалить пользователся из группы",
+            description = "Удалять пользователей может только owner"
+    )
+    @DeleteMapping("/{groupId}/user/{userId}")
+    public void removeUserFromGroup(@PathVariable UUID groupId, @PathVariable UUID userId) {
+        log.info("DELETE: GroupUserController leaveGroup, параметры: {} {}", groupId, userId);
+        groupUserService.removeUserFromGroup(groupId, userId);
+    }
 }

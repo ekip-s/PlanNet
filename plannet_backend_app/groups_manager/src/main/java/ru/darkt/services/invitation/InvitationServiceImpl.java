@@ -5,14 +5,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.darkt.ConflictException;
-import ru.darkt.ForbiddenException;
 import ru.darkt.NotFoundException;
 import ru.darkt.mappers.invitation.InvitationMapper;
 import ru.darkt.models.invitation.Invitation;
 import ru.darkt.models.invitation.InvitationResponse;
 import ru.darkt.repository.InvitationRepository;
-import ru.darkt.services.TokenService;
-import ru.darkt.services.group_user.GroupUserService;
+import ru.darkt.services.group_permission.GroupPermission;
 
 import java.security.SecureRandom;
 import java.util.Base64;
@@ -25,8 +23,7 @@ import java.util.UUID;
 public class InvitationServiceImpl implements InvitationService {
 
     private final InvitationRepository invitationRepository;
-    private final GroupUserService groupUserService;
-    private final TokenService tokenService;
+    private final GroupPermission groupPermissionService;
     private final InvitationMapper invitationMapper;
     private static final SecureRandom SECURE_RANDOM = new SecureRandom();
     @Value("${app.invitation.code.length}")
@@ -37,10 +34,11 @@ public class InvitationServiceImpl implements InvitationService {
     private int INVITATION_TTL;
 
     @Autowired
-    public InvitationServiceImpl(InvitationRepository invitationRepository, GroupUserService groupUserService, TokenService tokenService, InvitationMapper invitationMapper) {
+    public InvitationServiceImpl(InvitationRepository invitationRepository,
+                                 GroupPermission groupPermissionService,
+                                 InvitationMapper invitationMapper) {
         this.invitationRepository = invitationRepository;
-        this.groupUserService = groupUserService;
-        this.tokenService = tokenService;
+        this.groupPermissionService = groupPermissionService;
         this.invitationMapper = invitationMapper;
     }
 
@@ -48,20 +46,15 @@ public class InvitationServiceImpl implements InvitationService {
     @Override
     @Transactional
     public void addNewInvitation(UUID groupId) {
-        if (groupUserService.getOwner(groupId).getUserId().equals(tokenService.getCurrentUserId())) {
-            invitationRepository.save(new Invitation(generateUniqueCode(), groupId));
-        } else {
-            throw new ForbiddenException("Приглашение в группу может создать только владелец группы", "Запрещено");
-        }
+        groupPermissionService.validateOwnership(groupId);
+
+        invitationRepository.save(new Invitation(generateUniqueCode(), groupId));
     }
 
     @Override
     public List<InvitationResponse> getListInvitation(UUID groupId) {
-        if (groupUserService.getOwner(groupId).getUserId().equals(tokenService.getCurrentUserId())) {
-            return invitationMapper.toResponseList(invitationRepository.findByGroupIdAndRecent(groupId, INVITATION_TTL));
-        } else {
-            throw new ForbiddenException("Получать данные может только владелец группы", "Запрещено");
-        }
+        groupPermissionService.validateOwnership(groupId);
+        return invitationMapper.toResponseList(invitationRepository.findByGroupIdAndRecent(groupId, INVITATION_TTL));
     }
 
     @Override
@@ -79,12 +72,9 @@ public class InvitationServiceImpl implements InvitationService {
     @Override
     @Transactional
     public void deleteInvitationById(UUID invId) {
-        if (groupUserService.getOwner(getGroupByInvitationId(invId)).getUserId().equals(tokenService.getCurrentUserId())) {
-            invitationRepository.deleteById(invId);
-        } else {
-            throw new ForbiddenException("Удалять приглашение может только владелец группы",
-                    "Запрещено");
-        }
+        UUID groupId = getGroupByInvitationId(invId);
+        groupPermissionService.validateOwnership(groupId);
+        invitationRepository.deleteById(invId);
     }
 
     private UUID getGroupByInvitationId(UUID invId) {

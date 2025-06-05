@@ -10,6 +10,6 @@ public interface GroupUserService {
     void newGroupUser(UUID groupId, UUID userId, String userLogin, GroupRole role);
     void memberVerification(UUID groupId);
     List<GroupUserResponse> getGroupMembers(UUID groupId);
-    GroupUserResponse getOwner(UUID groupId);
-    void joinGroup(String code);
+    void leaveGroup(UUID groupId);
+    void removeUserFromGroup(UUID groupId, UUID userId);
 }
