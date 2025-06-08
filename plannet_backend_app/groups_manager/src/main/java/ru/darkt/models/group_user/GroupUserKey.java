@@ -34,4 +34,12 @@ public class GroupUserKey implements Serializable {
     public int hashCode() {
         return Objects.hash(groupId, userId);
     }
+
+    @Override
+    public String toString() {
+        return "GroupUserKey{" +
+                "groupId=" + groupId +
+                ", userId=" + userId +
+                '}';
+    }
 }

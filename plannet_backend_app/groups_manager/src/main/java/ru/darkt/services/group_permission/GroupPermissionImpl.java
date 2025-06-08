@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.darkt.ConflictException;
 import ru.darkt.ForbiddenException;
-import ru.darkt.models.group_user.GroupRole;
 import ru.darkt.repository.GroupUserRepository;
 import ru.darkt.services.TokenService;
 
@@ -22,8 +21,8 @@ public class GroupPermissionImpl implements GroupPermission {
         this.tokenService = tokenService;
     }
 
-    public boolean isGroupOwner(UUID groupId) {
-        return groupUserRepository.isOwner(groupId, tokenService.getCurrentUserId(), GroupRole.OWNER);
+    public boolean isGroupOwner(UUID groupId, UUID userId) {
+        return groupUserRepository.isOwner(groupId, userId);
     }
 
     public boolean isGroupMember(UUID groupId) {
@@ -37,13 +36,13 @@ public class GroupPermissionImpl implements GroupPermission {
     }
 
     public void validateOwnership(UUID groupId) {
-        if (!isGroupOwner(groupId)) {
+        if (!isGroupOwner(groupId, tokenService.getCurrentUserId())) {
             throw new ForbiddenException("Действие разрешено только владельцу группы", "Запрещено");
         }
     }
 
-    public void validateNotOwner(UUID groupId) {
-        if (isGroupOwner(groupId)) {
+    public void validateNotOwner(UUID groupId, UUID userId) {
+        if (isGroupOwner(groupId, userId)) {
             throw new ConflictException("Владелец не может выполнить это действие", "Конфликт");
         }
     }

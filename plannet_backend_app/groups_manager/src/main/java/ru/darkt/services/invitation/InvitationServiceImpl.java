@@ -64,6 +64,7 @@ public class InvitationServiceImpl implements InvitationService {
             throw new NotFoundException("Такого кода нет или его срок жизни истёк",
                     "Нет данных");
         } else {
+            invitationRepository.deleteById(invitation.get().getId());
             return invitation.get().getGroup().getId();
         }
 

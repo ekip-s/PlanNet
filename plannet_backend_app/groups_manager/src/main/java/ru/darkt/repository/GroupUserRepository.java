@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.darkt.models.group.Group;
-import ru.darkt.models.group_user.GroupRole;
 import ru.darkt.models.group_user.GroupUser;
 import ru.darkt.models.group_user.GroupUserKey;
 
@@ -17,15 +16,16 @@ public interface GroupUserRepository extends JpaRepository<GroupUser, GroupUserK
 
     List<GroupUser> findByGroup(Group group);
 
-    @Query("SELECT COUNT(gu) > 0 FROM GroupUser gu " +
+    @Query("SELECT COUNT(gu) > 0 " +
+            "FROM GroupUser gu " +
             "WHERE gu.id.groupId = :groupId " +
             "AND gu.id.userId = :userId " +
-            "AND gu.role = :role")
+            "AND gu.role = 0")
     boolean isOwner(@Param("groupId") UUID groupId,
-                    @Param("userId") UUID userId,
-                    @Param("role") GroupRole role);
+                    @Param("userId") UUID userId);
 
-    @Query("SELECT COUNT(gu) > 0 FROM GroupUser gu " +
+    @Query("SELECT COUNT(gu) > 0 " +
+            "FROM GroupUser gu " +
             "WHERE gu.id.groupId = :groupId " +
             "AND gu.id.userId = :userId")
     boolean isMember(@Param("groupId") UUID groupId, @Param("userId") UUID userId);

@@ -3,7 +3,6 @@ package ru.darkt.services.group_user;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.darkt.ConflictException;
 import ru.darkt.ForbiddenException;
 import ru.darkt.mappers.group_user.GroupUserMapper;
 import ru.darkt.models.group.Group;
@@ -55,7 +54,7 @@ public class GroupUserServiceImpl implements GroupUserService {
 
         Optional<GroupUser> user = members
                 .stream()
-                .filter(e -> e.getId().getUserId() == tokenService.getCurrentUserId())
+                .filter(e -> e.getId().getUserId().equals(tokenService.getCurrentUserId()))
                 .findFirst();
 
         if(user.isEmpty()) {
@@ -70,19 +69,15 @@ public class GroupUserServiceImpl implements GroupUserService {
     public void leaveGroup(UUID groupId) {
         UUID currentUserId = tokenService.getCurrentUserId();
 
-        groupPermissionService.validateNotOwner(groupId);
+        groupPermissionService.validateNotOwner(groupId, tokenService.getCurrentUserId());
         groupUserRepository.deleteById(new GroupUserKey(groupId, currentUserId));
     }
 
     @Override
     @Transactional
     public void removeUserFromGroup(UUID groupId, UUID userId) {
-        UUID currentUserId = tokenService.getCurrentUserId();
-        groupPermissionService.validateOwnership(groupId);
-
-        if (groupPermissionService.isGroupOwner(groupId)) {
-            throw new ConflictException("Нельзя удалить владельца группы", "Конфликт");
-        }
+        groupPermissionService.validateMembership(groupId);
+        groupPermissionService.validateNotOwner(groupId, userId);
 
         groupUserRepository.deleteById(new GroupUserKey(groupId, userId));
     }

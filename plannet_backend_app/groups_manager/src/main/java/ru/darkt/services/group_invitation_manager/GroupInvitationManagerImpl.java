@@ -18,7 +18,9 @@ public class GroupInvitationManagerImpl implements GroupInvitationManager {
     private final TokenService tokenService;
 
     @Autowired
-    public GroupInvitationManagerImpl(InvitationService invitationService, GroupUserService groupUserService, TokenService tokenService) {
+    public GroupInvitationManagerImpl(InvitationService invitationService,
+                                      GroupUserService groupUserService,
+                                      TokenService tokenService) {
         this.invitationService = invitationService;
         this.groupUserService = groupUserService;
         this.tokenService = tokenService;

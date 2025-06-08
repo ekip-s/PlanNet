@@ -36,6 +36,11 @@ public class GroupServiceLinkImpl implements GroupServiceLink {
     }
 
     @Override
+    public List<ServiceResponse> getAllServiceList() {
+        return serviceMapper.toResponseList(serviceRepository.findAll());
+    }
+
+    @Override
     public List<ServiceResponse> getGroupServiceList(UUID groupId) {
         groupPermissionService.validateMembership(groupId);
         return serviceMapper.toResponseList(groupServiceRepository.findServicesByGroupId(groupId));
