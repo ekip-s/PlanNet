@@ -1,4 +1,4 @@
-package ru.darkt.models;
+package ru.darkt.models.service;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,4 +32,5 @@ public class Service {
 
     @Column(nullable = false, unique = true, length = 50)
     private String name;
+
 }

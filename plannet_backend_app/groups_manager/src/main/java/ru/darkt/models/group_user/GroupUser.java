@@ -43,5 +43,16 @@ public class GroupUser {
         this.userLogin = userLogin;
         this.createdAt = LocalDateTime.now();
         this.role = role;
+        this.group = new Group(groupId);
+    }
+
+    @Override
+    public String toString() {
+        return "GroupUser{" +
+                "id=" + id +
+                ", userLogin='" + userLogin + '\'' +
+                ", createdAt=" + createdAt +
+                ", role=" + role +
+                '}';
     }
 }
