@@ -14,13 +14,16 @@ import java.util.UUID;
 @AllArgsConstructor
 public class CreateGroupRequest {
 
+    private UUID id;
     private String name;
     private UUID[] services;
+
 
     @Override
     public String toString() {
         return "CreateGroupRequest{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", services=" + Arrays.toString(services) +
                 '}';
     }

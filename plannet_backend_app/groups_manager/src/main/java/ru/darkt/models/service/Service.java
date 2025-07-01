@@ -1,17 +1,18 @@
 package ru.darkt.models.service;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UuidGenerator;
+import ru.darkt.models.group.Group;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -33,4 +34,11 @@ public class Service {
     @Column(nullable = false, unique = true, length = 50)
     private String name;
 
+    @JsonIgnore
+    @ManyToMany(mappedBy = "services")
+    private List<Group> groups = new ArrayList<>();
+
+    public Service(UUID id) {
+        this.id = id;
+    }
 }

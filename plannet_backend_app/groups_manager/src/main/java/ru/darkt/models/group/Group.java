@@ -1,5 +1,6 @@
 package ru.darkt.models.group;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 import ru.darkt.models.group_service.GroupServiceModel;
 import ru.darkt.models.group_user.GroupUser;
+import ru.darkt.models.service.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -35,6 +37,17 @@ public class Group {
     @Column(nullable = false, length = 50)
     private String name;
 
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<GroupUser> groupUsers = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "group_services",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "service_id")
+    )
+    private List<Service> services = new ArrayList<>();
+
     public Group(String name) {
         this.createdAt = LocalDateTime.now();
         this.name = name;
@@ -42,6 +55,11 @@ public class Group {
 
     public Group(UUID id) {
         this.id = id;
+    }
+
+    public Group(UUID id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
     @Override

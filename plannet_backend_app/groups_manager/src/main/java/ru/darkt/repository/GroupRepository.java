@@ -21,4 +21,9 @@ public interface GroupRepository extends JpaRepository<Group, UUID> {
             @Param("userId") UUID userId,
             @Param("serviceName") String serviceName
     );
+
+    @Query("SELECT DISTINCT g FROM Group g " +
+            "JOIN GroupUser gu ON g.id = gu.id.groupId " +
+            "WHERE gu.id.userId = :userId ")
+    List<Group> findByUserId(@Param("userId") UUID userId);
 }

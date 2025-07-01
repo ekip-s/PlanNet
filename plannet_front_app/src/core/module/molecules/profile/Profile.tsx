@@ -41,6 +41,10 @@ const Profile = () => {
         logout();
     };
 
+    const goToPageHandler = (page:string) => {
+        navigate(page);
+    }
+
     if (!isAuthenticated) return;
 
     return (
@@ -67,6 +71,10 @@ const Profile = () => {
                 role="menu"
             >
                 <div className={styles.menuItem} role="menuitem">
+                    <button className={styles.node} onClick={() => goToPageHandler("profile")}>
+                        Профиль
+                    </button>
+                    <hr />
                     <button className={styles.logout} onClick={profileLogoutHandler}>
                         Выйти
                     </button>

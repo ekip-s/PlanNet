@@ -72,10 +72,16 @@ public class InvitationServiceImpl implements InvitationService {
 
     @Override
     @Transactional
-    public void deleteInvitationById(UUID invId) {
-        UUID groupId = getGroupByInvitationId(invId);
-        groupPermissionService.validateOwnership(groupId);
-        invitationRepository.deleteById(invId);
+    public void deleteInvitationById(String code) {
+        Invitation invitation = getGroupByCode(code);
+        groupPermissionService.validateOwnership(invitation.getGroup().getId());
+        invitationRepository.deleteById(invitation.getId());
+    }
+
+    private Invitation getGroupByCode(String code) {
+        return invitationRepository
+                .findByCode(code)
+                .orElseThrow(() -> new NotFoundException("Нет записи с переданным кодом", "Нет данных"));
     }
 
     private UUID getGroupByInvitationId(UUID invId) {

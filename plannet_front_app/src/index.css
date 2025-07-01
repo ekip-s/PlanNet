@@ -10,18 +10,23 @@
 
     --text: white;
     --side-text: rgba(204, 204, 204, 0.8);
-    --accent-text: rgba(250, 216, 59, 0.93);
+    --accent-text: rgb(250, 216, 59);
 
     --widget-bg: #F8FAFC;
     --widget-border: #909297;
     --widget-radius: 12px;
+    --widget-color: rgba(179, 179, 179, 0.91);
 
     --surface-bg: #FFFFFF;
     --text-accent: #2A6EF0;
 
+    --box-copy-color: rgba(42, 110, 240, 0.69);
+
     --indentation: 5%;
     --btn-radius: 7px;
     --btn-radius-small: 4px;
+    --exit-color: rgba(213, 81, 81, 0.83);
+    --comment-text: #4c4c4c;
 }
 
 * {
@@ -33,4 +38,48 @@ html,
 body,
 #root {
   height: 100%;
+}
+
+.global-custom-root {
+    background: transparent;
+    border-radius: 8px;
+}
+
+.global-custom-menu {
+    list-style: none;
+    background: transparent;
+    border: none;
+}
+
+.menu-item {
+    padding: 0 4px 1px 0;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid transparent;
+}
+
+.menu-icon {
+    margin-right: 6px;
+    font-size: 1rem;
+    color: #64748b;
+}
+
+.menu-label {
+    font-size: 0.8rem;
+    flex-grow: 1;
+}
+
+.menu-action {
+    padding: 3px 6px;
+    border-radius: 4px;
+    background: #f1f5f9;
+    border-bottom: 2px solid gray;
+    transition: border-color 0.3s ease;
+}
+
+.p-highlight .menu-action {
+    border-bottom: 2px solid var(--text-accent); /* активный таб */
+    color: var(--text-accent);
 }

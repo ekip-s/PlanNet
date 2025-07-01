@@ -1,0 +1,25 @@
+.newTask {
+    margin-top: 10px;
+    margin-left: var(--indentation);
+    margin-right: var(--indentation);
+}
+
+.card {
+    background-color: var(--widget-color);
+    margin-top: 5px;
+    padding: 10px;
+}
+
+.card label {
+    margin-right: 5px;
+}
+
+.topData {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.customInput {
+    padding: 3px;
+}
