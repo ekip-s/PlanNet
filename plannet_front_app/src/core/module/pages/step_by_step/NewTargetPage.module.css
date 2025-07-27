@@ -1,0 +1,47 @@
+.newTargetPage {
+    margin-top: 10px;
+    margin-right: var(--indentation);
+    margin-left: var(--indentation);
+}
+
+.wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card {
+    background-color: var(--widget-color);
+    margin-top: 5px;
+    padding: 10px;
+}
+
+form h3 {
+    color: var(--text);
+    margin-bottom: 10px;
+}
+
+form label {
+    margin-right: 5px;
+}
+
+.textarea {
+    width: 100%;
+    min-height: 100px;
+}
+
+.top {
+    margin-top: 10px;
+}
+
+.btn {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: 10px;
+}
+
+.exit {
+    background-color: var(--exit-color);
+}

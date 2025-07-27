@@ -1,0 +1,19 @@
+.stepByStepPage {
+    margin-top: 10px;
+    margin-left: var(--indentation);
+    margin-right: var(--indentation);
+}
+
+.btnWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.info h3 {
+    color: var(--text);
+}
+
+.info p {
+    color: var(--side-text);
+}
