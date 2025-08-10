@@ -37,6 +37,9 @@ public class Target {
     @Column(name = "type", nullable = false)
     @Enumerated(EnumType.STRING)
     private TargetType type;
+    @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private TargetStatus status;
     @Column(name = "title", nullable = false, length = 255)
     private String title;
     @Column(name = "description", columnDefinition = "TEXT")
@@ -44,6 +47,10 @@ public class Target {
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    public Target(UUID id) {
+        this.id = id;
+    }
 
     @Override
     public String toString() {
@@ -68,5 +75,21 @@ public class Target {
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
+    }
+
+    public Target ititTarget(UUID parentId, UUID userId) {
+        if (parentId != null) {
+            this.parent = new Target(parentId);
+        }
+
+        if (this.type.equals(TargetType.action)) {
+            this.status = TargetStatus.CANCELED;
+        } else {
+            this.status = TargetStatus.NEW;
+        }
+        this.createdAt = LocalDateTime.now();
+        this.userId = userId;
+
+        return this;
     }
 }

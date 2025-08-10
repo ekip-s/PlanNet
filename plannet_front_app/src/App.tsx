@@ -16,6 +16,7 @@ import TaskPage from "./core/module/pages/task/TaskPage.tsx";
 import NewTask from "./core/module/organisms/new_task/NewTask.tsx";
 import StepByStepPage from "./core/module/pages/step_by_step/StepByStepPage.tsx";
 import NewTargetPage from "./core/module/pages/step_by_step/NewTargetPage.tsx";
+import StepByStepDetailPage from "./core/module/pages/step_by_step/StepByStepDetailPage.tsx";
 
 const App = () =>  {
   return (
@@ -30,6 +31,7 @@ const App = () =>  {
                       <Route path="/logout" element={<LogoutPage />} />
                       <Route element={<ProtectedRoute />}>
                           <Route path="/stepByStep" element={<StepByStepPage />} />
+                          <Route path="/stepByStep/:id" element={<StepByStepDetailPage />} />
                           <Route path="/stepByStep/new" element={<NewTargetPage />} />
                           <Route path="/tasks" element={<TaskPage />} />
                           <Route path="/tasks/new" element={<NewTask />} />

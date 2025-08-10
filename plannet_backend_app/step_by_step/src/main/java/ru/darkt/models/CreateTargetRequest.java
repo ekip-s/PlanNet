@@ -14,7 +14,6 @@ import java.util.UUID;
 public class CreateTargetRequest {
 
     private UUID id;
-    private UUID userId;
     private UUID parentId;
     private TargetType type;
     private String title;
@@ -24,7 +23,6 @@ public class CreateTargetRequest {
     public String toString() {
         return "CreateTargetRequest{" +
                 "id=" + id +
-                ", userId=" + userId +
                 ", parentId=" + parentId +
                 ", type=" + type +
                 ", title='" + title + '\'' +

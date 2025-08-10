@@ -28,6 +28,7 @@ form label {
 .textarea {
     width: 100%;
     min-height: 100px;
+    padding: 2px;
 }
 
 .top {
@@ -43,5 +44,20 @@ form label {
 }
 
 .exit {
+    padding: 5px;
+    border: none;
+    border-radius: 4px;
     background-color: var(--exit-color);
+    font-size: 15px;
+    height: max-content;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+}
+
+.exit:hover {
+    opacity: 0.7;
+}
+
+.customInput {
+    padding: 2px;
 }

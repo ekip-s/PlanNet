@@ -4,7 +4,7 @@ import apiNavigation from "./apiNavigation.json";
 type RequestOptions<T = unknown> = {
     url: string;
     service: keyof typeof apiNavigation;
-    method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+    method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
     body?: unknown;
     token?: string | null;
     headers?: HeadersInit;

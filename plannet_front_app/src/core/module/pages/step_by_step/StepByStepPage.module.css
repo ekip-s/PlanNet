@@ -17,3 +17,14 @@
 .info p {
     color: var(--side-text);
 }
+
+.dropdown {
+    padding: 5px;
+    border: none;
+    margin-right: 10px;
+    width: 200px;
+}
+
+.nodeList {
+    margin-top: 10px;
+}

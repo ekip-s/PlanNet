@@ -1,0 +1,35 @@
+.subtargetNode {
+    background: var(--header-color);
+    padding: 3px;
+    border-radius: var(--btn-radius-small);
+    width: 45%;
+    margin-bottom: 10px;
+}
+
+.subtargetTop {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 3px;
+}
+
+.subtargetTop h5 {
+    color: var(--text);
+}
+
+.btn {
+    margin-top: 10px;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: 5px;
+}
+
+.toInProgress {
+    background-color: var(--true-color) !important;
+}
+
+.toCanceled {
+    background-color: var(--exit-color) !important;
+}

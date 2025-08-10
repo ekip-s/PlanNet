@@ -1,0 +1,88 @@
+.targetNode {
+    margin-bottom: 10px;
+}
+
+.cardTop {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.cardTop h4 {
+    color: var(--text);
+}
+
+.status {
+    border: 1px solid;
+    border-radius: var(--btn-radius-small);
+    padding: 2px;
+    letter-spacing: 1px;
+    color: var(--text);
+    box-shadow: var(--shadow-sm);
+}
+
+.new {
+    background-color: gray;
+    border-color: gray;
+}
+
+.in_progress {
+    background-color: #4242e1;
+    border-color: #4242e1;
+}
+
+.completed {
+    background-color: #1caf1c;
+    border-color: #1caf1c;
+}
+
+.canceled {
+    background-color: var(--exit-color);
+    border-color: var(--exit-color);
+}
+
+.description {
+    margin-top: 4px;
+    background-color: var(--app-main-color);
+    padding: 2px;
+    border-radius: 4px;
+    display: flex;
+    gap: 10px;
+    width: max-content;
+}
+
+.description label {
+    color: var(--text);
+}
+
+.description div {
+    color: var(--side-text);
+}
+
+.description span {
+    cursor: pointer;
+    color: var(--accent-text);
+    margin-left: 4px;
+}
+
+.btn {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+}
+
+.infoBtn {
+    padding: 5px;
+    border: none;
+    border-radius: 4px;
+    background-color: var(--box-copy-color);
+    font-size: 15px;
+    height: max-content;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    color: var(--text-btn);
+}
+
+.infoBtn:hover {
+    opacity: 0.7;
+}

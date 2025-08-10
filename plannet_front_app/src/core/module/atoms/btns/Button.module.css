@@ -7,6 +7,7 @@
     height: max-content;
     letter-spacing: 1.5px;
     cursor: pointer;
+    color: var(--text-btn);
 }
 
 .button:hover {
