@@ -77,7 +77,7 @@ services:
       - --http-relative-path=/auth
       - --proxy-headers=forwarded
       - --hostname-strict=false
-      - --hostname=https://darkt.ru/auth
+      - --hostname=https://plannet.site/auth
     environment:
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://keycloak-db:5432/${POSTGRES_DB}
@@ -87,9 +87,9 @@ services:
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
       # Настройки хоста (актуальная версия v2)
-      KC_HOSTNAME: darkt.ru
-      KC_HOSTNAME_URL: https://darkt.ru
-      KC_HOSTNAME_ADMIN_URL: https://darkt.ru/auth/admin
+      KC_HOSTNAME: plannet.site
+      KC_HOSTNAME_URL: https://plannet.site
+      KC_HOSTNAME_ADMIN_URL: https://plannet.site/auth/admin
       # Настройки проксирования
       KC_PROXY: edge 
       KC_PROXY_HEADERS: forwarded
