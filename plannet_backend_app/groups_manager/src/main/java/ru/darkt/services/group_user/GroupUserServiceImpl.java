@@ -1,0 +1,84 @@
+package ru.darkt.services.group_user;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.darkt.ForbiddenException;
+import ru.darkt.mappers.group_user.GroupUserMapper;
+import ru.darkt.models.group.Group;
+import ru.darkt.models.group_user.GroupRole;
+import ru.darkt.models.group_user.GroupUser;
+import ru.darkt.models.group_user.GroupUserKey;
+import ru.darkt.models.group_user.GroupUserResponse;
+import ru.darkt.repository.GroupUserRepository;
+import ru.darkt.services.TokenService;
+import ru.darkt.services.group_permission.GroupPermission;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+@Service
+@Transactional(readOnly = true)
+public class GroupUserServiceImpl implements GroupUserService {
+
+    private final GroupUserRepository groupUserRepository;
+    private final TokenService tokenService;
+    private final GroupUserMapper groupUserMapper;
+    private final GroupPermission groupPermissionService;
+
+    @Autowired
+    public GroupUserServiceImpl(GroupUserRepository groupUserRepository,
+                                TokenService tokenService,
+                                GroupUserMapper groupUserMapper, GroupPermission groupPermissionService) {
+        this.groupUserRepository = groupUserRepository;
+        this.tokenService = tokenService;
+        this.groupUserMapper = groupUserMapper;
+        this.groupPermissionService = groupPermissionService;
+    }
+
+    @Override
+    @Transactional
+    public void newGroupUser(UUID groupId, UUID userId, String userLogin, GroupRole role) {
+        groupUserRepository.save(new GroupUser(groupId, userId, userLogin, role));
+    }
+
+    @Override
+    public void memberVerification(UUID groupId) {
+        getGroupMembers(groupId);
+    }
+
+    @Override
+    public List<GroupUserResponse> getGroupMembers(UUID groupId) {
+        List<GroupUser> members = groupUserRepository.findByGroup(new Group(groupId));
+
+        Optional<GroupUser> user = members
+                .stream()
+                .filter(e -> e.getId().getUserId().equals(tokenService.getCurrentUserId()))
+                .findFirst();
+
+        if(user.isEmpty()) {
+            throw new ForbiddenException("Получать записи могут только участники группы", "Запрещено");
+        } else {
+            return groupUserMapper.toResponseList(members);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void leaveGroup(UUID groupId) {
+        UUID currentUserId = tokenService.getCurrentUserId();
+
+        groupPermissionService.validateNotOwner(groupId, tokenService.getCurrentUserId());
+        groupUserRepository.deleteById(new GroupUserKey(groupId, currentUserId));
+    }
+
+    @Override
+    @Transactional
+    public void removeUserFromGroup(UUID groupId, UUID userId) {
+        groupPermissionService.validateMembership(groupId);
+        groupPermissionService.validateNotOwner(groupId, userId);
+
+        groupUserRepository.deleteById(new GroupUserKey(groupId, userId));
+    }
+}

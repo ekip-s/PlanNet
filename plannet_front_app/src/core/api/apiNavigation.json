@@ -1,0 +1,22 @@
+{
+  "group": {
+    "baseUrl": "VITE_GROUPS_MANAGER",
+    "path": "/group/api/v1"
+  },
+  "group_service": {
+    "baseUrl": "VITE_GROUPS_MANAGER",
+    "path": "/group_service/api/v1"
+  },
+  "group_user": {
+    "baseUrl": "VITE_GROUPS_MANAGER",
+    "path": "/group_user/api/v1"
+  },
+  "invitation": {
+    "baseUrl": "VITE_GROUPS_MANAGER",
+    "path": "/invitation/api/v1"
+  },
+  "target": {
+    "baseUrl": "VITE_STEP_BY_STEP",
+    "path": "/target/api/v1"
+  }
+}

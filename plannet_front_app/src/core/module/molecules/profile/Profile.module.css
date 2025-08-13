@@ -68,15 +68,18 @@
 }
 
 .node {
-    padding: 2px;
     cursor: pointer;
     border-radius: var(--btn-radius-small);
     box-shadow: var(--shadow-sm);
-    background: var(--widget-bg);
-    border-color: var(--widget-border);
+    background: #838383;
     font-size: 16px;
-    margin: 3px;
-    width: 95%;
+    width: 100%;
+    border: none;
+    color: var(--text);
+}
+
+.node:hover {
+    opacity: 0.8;
 }
 
 .logout:hover {

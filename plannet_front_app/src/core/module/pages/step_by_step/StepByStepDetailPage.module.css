@@ -1,0 +1,32 @@
+.stepByStepDetailPage {
+    margin-top: 10px;
+    margin-right: var(--indentation);
+    margin-left: var(--indentation);
+}
+
+.wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.wrapper h4 {
+    color: var(--text);
+}
+
+.subtargets {
+    background-color: var(--app-main-color);
+    margin-top: 7px;
+    padding: 4px;
+    border-radius: var(--btn-radius-small);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.formHeader {
+    background-color: var(--header-color);
+    color: var(--text);
+    padding: 4px;
+}

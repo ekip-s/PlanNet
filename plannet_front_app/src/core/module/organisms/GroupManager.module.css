@@ -1,0 +1,13 @@
+.groupManager {
+    margin-top: 10px;
+}
+
+.groupManager h4 {
+    color: var(--text);
+}
+
+.wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
