@@ -413,20 +413,20 @@
             "clientId": "plan_net_front_app",
             "name": "Plan Net",
             "description": "",
-            "rootUrl": "https://darkt.ru",
-            "adminUrl": "https://darkt.ru",
-            "baseUrl": "https://darkt.ru",
+            "rootUrl": "https://plannet.site",
+            "adminUrl": "https://plannet.site",
+            "baseUrl": "https://plannet.site",
             "surrogateAuthRequired": false,
             "enabled": true,
             "alwaysDisplayInConsole": false,
             "clientAuthenticatorType": "client-secret",
             "redirectUris":
             [
-                "https://darkt.ru/*"
+                "https://plannet.site/*"
             ],
             "webOrigins":
             [
-                "https://darkt.ru"
+                "https://plannet.site"
             ],
             "notBefore": 0,
             "bearerOnly": false,
@@ -444,7 +444,7 @@
                 "oidc.ciba.grant.enabled": "false",
                 "backchannel.logout.session.required": "true",
                 "frontchannel.logout.session.required": "true",
-                "post.logout.redirect.uris": "https://darkt.ru/logout",
+                "post.logout.redirect.uris": "https://plannet.site/logout",
                 "display.on.consent.screen": "false",
                 "oauth2.device.authorization.grant.enabled": "false",
                 "backchannel.logout.revoke.offline.tokens": "false"

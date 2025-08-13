@@ -63,8 +63,8 @@ public class SecurityConfig {
         cfg.setAllowedOrigins(List.of(
                 "http://localhost:8081",
                 "http://localhost:5173",
-                "http://darkt.ru",
-                "https://darkt.ru",
+                "http://plannet.site",
+                "https://plannet.site",
                 "http://task_master:8081"
         ));
         cfg.setAllowedMethods(List.of("GET","POST","PATCH","DELETE","OPTIONS"));
