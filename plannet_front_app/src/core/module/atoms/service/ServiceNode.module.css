@@ -1,0 +1,30 @@
+.serviceNode {
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    border: 1px solid var(--widget-border);
+    width: max-content;
+    padding: 3px;
+    border-radius:var(--btn-radius-small);
+    background-color: var(--widget-bg);
+}
+
+.serviceNode p {
+
+}
+
+.serviceNode div {
+    border-left: 1px solid var(--widget-border);
+    margin-left: 5px;
+}
+
+.serviceNode i {
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+.serviceNode i:hover {
+    color: var(--exit-color);
+}
+

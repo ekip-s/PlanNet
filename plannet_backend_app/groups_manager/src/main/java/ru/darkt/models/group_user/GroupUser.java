@@ -1,5 +1,6 @@
 package ru.darkt.models.group_user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,6 +34,7 @@ public class GroupUser {
     @Enumerated(EnumType.ORDINAL)
     private GroupRole role;
 
+    @JsonIgnore
     @MapsId("groupId")
     @ManyToOne
     @JoinColumn(name = "group_id")

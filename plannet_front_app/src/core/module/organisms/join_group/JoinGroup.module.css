@@ -1,0 +1,20 @@
+.joinGroup {
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.content {
+    border: 1px solid #aeaeae;
+    padding: 10px;
+    border-radius: var(--btn-radius-small);
+    background-color: var(--widget-border);
+}
+
+.btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}

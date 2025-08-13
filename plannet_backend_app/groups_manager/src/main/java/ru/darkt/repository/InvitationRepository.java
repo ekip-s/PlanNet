@@ -14,6 +14,7 @@ import java.util.UUID;
 public interface InvitationRepository extends JpaRepository<Invitation, UUID> {
 
     boolean existsByCode(String code);
+    Optional<Invitation> findByCode(@Param("code") String code);
     @Query(value = """
         SELECT * FROM invitations\s
         WHERE code = :code\s

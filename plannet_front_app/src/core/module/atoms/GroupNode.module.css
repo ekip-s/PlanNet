@@ -1,0 +1,123 @@
+.groupNode {
+    margin-top: 10px;
+    background-color: var(--widget-color);
+}
+
+.wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+}
+
+.isOwner {
+    margin-left: 10px;
+    font-size: 10px;
+    border: 1px solid var(--widget-color);
+    border-radius: 15px;
+    letter-spacing: 1px;
+    padding: 1px 5px 1px 5px;
+    background-color: green;
+}
+
+.infoWrapper {
+    margin-top: 10px;
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    position: relative;
+}
+
+.infoWrapper::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 10%;
+    bottom: 10%;
+    width: 1px;
+    background-color: #e0e0e0; /* Цвет линии */
+}
+
+.services {
+    width: 45%;
+}
+
+.table {
+    margin-top: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.table :global(.p-datatable-thead) th {
+    background-color: transparent;
+    color: var(--text-accent);
+    text-align: center;
+    padding: 12px 10px;
+    border-right: 1px solid transparent;
+    font-weight: 400;
+    transition: background-color 0.3s;
+}
+
+.table :global(.p-datatable-thead) th:last-child {
+    border-right: none;
+}
+
+.table :global(.p-datatable-thead) tr {
+    border-bottom: 2px solid #3498db;
+}
+
+.table :global(.p-datatable-tbody) tr:hover td {
+    background-color: #e3f2fd !important;
+    cursor: pointer;
+}
+
+.table :global(.p-datatable-tbody) td:last-child {
+    padding: 6px;
+    text-align: right;
+}
+
+table :global(.p-datatable-tbody) td {
+    background-color: #ffffff;
+    color: #2c3e50;
+    padding: 10px 12px;
+    border-right: 1px solid transparent;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.table :global(.p-datatable-tbody) td:last-child {
+    border-right: none;
+}
+
+.tableNode {
+    padding: 8px;
+    text-align: center;
+}
+
+.adminBtn {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+}
+
+.deleteBtn {
+    background-color: var(--exit-color);
+    margin-right: 5px;
+}
+
+.input {
+    padding: 2px;
+}
+
+.input:disabled {
+    color: black;
+    background-color: transparent;
+    border: none;
+    opacity: 1;
+}
+
+.setGroupName {
+    margin-left: 10px;
+}
+

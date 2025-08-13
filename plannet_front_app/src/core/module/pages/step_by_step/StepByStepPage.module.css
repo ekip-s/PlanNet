@@ -1,0 +1,30 @@
+.stepByStepPage {
+    margin-top: 10px;
+    margin-left: var(--indentation);
+    margin-right: var(--indentation);
+}
+
+.btnWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.info h3 {
+    color: var(--text);
+}
+
+.info p {
+    color: var(--side-text);
+}
+
+.dropdown {
+    padding: 5px;
+    border: none;
+    margin-right: 10px;
+    width: 200px;
+}
+
+.nodeList {
+    margin-top: 10px;
+}

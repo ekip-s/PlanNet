@@ -1,0 +1,11 @@
+.taskPage {
+    margin-top: 10px;
+    margin-right: var(--indentation);
+    margin-left: var(--indentation);
+}
+
+.wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

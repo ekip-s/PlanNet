@@ -6,7 +6,17 @@ import Home from "./core/module/pages/Home.tsx";
 import LogoutPage from "./core/module/pages/LogoutPage.tsx";
 import ProtectedRoute from "./keycloak/ProtectedRoute.tsx";
 import {AuthProvider} from "./keycloak/AuthContext.tsx";
-
+import Profile from "./core/module/pages/Profile.tsx";
+import "primereact/resources/primereact.min.css";
+import "primereact/resources/themes/lara-light-indigo/theme.css";
+import GroupManager from "./core/module/organisms/GroupManager.tsx";
+import 'primeicons/primeicons.css';
+import JoinGroup from "./core/module/organisms/join_group/JoinGroup.tsx";
+import TaskPage from "./core/module/pages/task/TaskPage.tsx";
+import NewTask from "./core/module/organisms/new_task/NewTask.tsx";
+import StepByStepPage from "./core/module/pages/step_by_step/StepByStepPage.tsx";
+import NewTargetPage from "./core/module/pages/step_by_step/NewTargetPage.tsx";
+import StepByStepDetailPage from "./core/module/pages/step_by_step/StepByStepDetailPage.tsx";
 
 const App = () =>  {
   return (
@@ -20,7 +30,15 @@ const App = () =>  {
                       <Route path="/home" element={<Home />} />
                       <Route path="/logout" element={<LogoutPage />} />
                       <Route element={<ProtectedRoute />}>
-                          <Route path="/tasks" element={<div>Защищенный слой</div>} />
+                          <Route path="/stepByStep" element={<StepByStepPage />} />
+                          <Route path="/stepByStep/:id" element={<StepByStepDetailPage />} />
+                          <Route path="/stepByStep/new" element={<NewTargetPage />} />
+                          <Route path="/tasks" element={<TaskPage />} />
+                          <Route path="/tasks/new" element={<NewTask />} />
+                          <Route path="/profile" element={<Profile />}>
+                              <Route path="group" element={<GroupManager />} />
+                              <Route path="group/join/:code" element={<JoinGroup />} />
+                          </Route>
                       </Route>
                   </Routes>
               </main>

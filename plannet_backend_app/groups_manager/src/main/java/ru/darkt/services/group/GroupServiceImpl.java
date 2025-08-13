@@ -3,10 +3,12 @@ package ru.darkt.services.group;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.darkt.NotFoundException;
 import ru.darkt.mappers.group.GroupMapper;
 import ru.darkt.models.group.CreateGroupRequest;
 import ru.darkt.models.group.Group;
 import ru.darkt.models.group.GroupLightResponse;
+import ru.darkt.models.group.GroupResponse;
 import ru.darkt.models.group_service.GroupServiceModel;
 import ru.darkt.models.group_user.GroupRole;
 import ru.darkt.repository.GroupRepository;
@@ -48,6 +50,13 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    public List<GroupResponse> getAllGroupList() {
+        return groupMapper
+                .toResponseList(groupRepository
+                        .findByUserId(tokenService.getCurrentUserId()));
+    }
+
+    @Override
     public List<GroupLightResponse> getGroupList(String serviceName) {
         return groupMapper
                 .toLightResponseList(groupRepository
@@ -57,17 +66,13 @@ public class GroupServiceImpl implements GroupService {
     @Override
     @Transactional
     public UUID addNewGroup(CreateGroupRequest createGroupRequest) {
-        Group group = groupRepository.save(new Group(createGroupRequest.getName()));
-        UUID groupId = group.getId();
-
-        groupUserService.newGroupUser(groupId,
-                tokenService.getCurrentUserId(),
-                tokenService.getCurrentUserLogin(),
-                GroupRole.OWNER);
-
-        linkToService(groupId, createGroupRequest.getServices());
-
-        return groupId;
+        Group group;
+        if (createGroupRequest.getId() == null) {
+            group = createGroup(createGroupRequest);
+        } else {
+            group = updateGroup(createGroupRequest);
+        }
+        return group.getId();
     }
 
     @Override
@@ -75,6 +80,27 @@ public class GroupServiceImpl implements GroupService {
     public void deleteGroup(UUID groupId) {
         groupPermissionService.validateOwnership(groupId);
         groupRepository.deleteById(groupId);
+    }
+
+    @Transactional
+    private Group createGroup(CreateGroupRequest request) {
+        Group group = groupRepository.save(new Group(request.getName()));
+        addGroupOtherData(group.getId(), request.getServices());
+        return group;
+    }
+
+    @Transactional
+    private Group updateGroup(CreateGroupRequest request) {
+        groupPermissionService.validateOwnership(request.getId());
+        Group group = getGroupById(request.getId());
+        group.setName(request.getName());
+        return groupRepository.save(group);
+    }
+
+    private Group getGroupById(UUID id) {
+        return groupRepository
+                .findById(id)
+                .orElseThrow(() -> new NotFoundException("Такой группы нет", "Нет данных"));
     }
 
     @Transactional
@@ -87,5 +113,17 @@ public class GroupServiceImpl implements GroupService {
         }
 
         groupServiceRepository.saveAll(groupServiceList);
+    }
+
+    @Transactional
+    private void addGroupOtherData(UUID groupId, UUID[] services) {
+        groupUserService.newGroupUser(groupId,
+                tokenService.getCurrentUserId(),
+                tokenService.getCurrentUserLogin(),
+                GroupRole.OWNER);
+
+        if(services.length == 0) {
+            linkToService(groupId, services);
+        }
     }
 }

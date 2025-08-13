@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.darkt.models.group.CreateGroupRequest;
 import ru.darkt.models.group.GroupLightResponse;
+import ru.darkt.models.group.GroupResponse;
 import ru.darkt.services.group.GroupService;
 
 import java.util.List;
@@ -23,6 +24,16 @@ public class GroupController {
 
     @Operation(
             summary = "Получить свои группы",
+            description = "Возвращает группы пользователя"
+    )
+    @GetMapping
+    public List<GroupResponse> getAllGroupList() {
+        log.info("GET: GroupController getAllGroupList");
+        return groupService.getAllGroupList();
+    }
+
+    @Operation(
+            summary = "Получить свои группы с фильтром по сервису",
             description = "Возвращает группы пользователя"
     )
     @GetMapping("/service/{serviceName}")

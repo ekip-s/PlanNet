@@ -10,5 +10,5 @@ public interface InvitationService {
     void addNewInvitation(UUID groupId);
     List<InvitationResponse> getListInvitation(UUID groupId);
     UUID codeVerification(String code);
-    void deleteInvitationById(UUID invId);
+    void deleteInvitationById(String code);
 }

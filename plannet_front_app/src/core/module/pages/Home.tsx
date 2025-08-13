@@ -1,6 +1,7 @@
 import styles from "./Home.module.css"
 import ListNone from "../molecules/ListNone.tsx";
 import money_logo from "../../../assets/money.svg";
+import step_logo from "../../../assets/step.svg";
 import new_logo from "../../../assets/new.svg";
 import nginx from "../../../assets/mginx.svg";
 import task_logo from "../../../assets/task.svg";
@@ -98,6 +99,16 @@ const appList:ListNodeProps[] = [
     },
     {
         id: 3,
+        title: "Step by Step",
+        inDevelopment: false,
+        hidden: false,
+        btnTitle: "К цели ...",
+        logoSvg: step_logo,
+        description: "Ведите к своим большим целям через пошаговые действия и следите за эффективностью.",
+        path: "/stepByStep"
+    },
+    {
+        id: 4,
         title: "Тут будет новый сервис",
         inDevelopment: true,
         hidden: false,

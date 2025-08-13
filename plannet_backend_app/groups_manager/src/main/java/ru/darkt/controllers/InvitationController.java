@@ -44,9 +44,9 @@ public class InvitationController {
             summary = "Удалить приглашение",
             description = "Удалить может только owner"
     )
-    @DeleteMapping("/{invId}")
-    public void deleteInvitationById(@PathVariable UUID invId) {
-        log.info("GET: InvitationController deleteInvitationById, параметры: {}", invId);
-        invitationService.deleteInvitationById(invId);
+    @DeleteMapping("/{code}")
+    public void deleteInvitationById(@PathVariable String code) {
+        log.info("GET: InvitationController deleteInvitationById, параметры: {}", code);
+        invitationService.deleteInvitationById(code);
     }
 }
