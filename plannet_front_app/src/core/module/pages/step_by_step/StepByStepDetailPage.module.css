@@ -24,3 +24,9 @@
     justify-content: space-between;
     flex-wrap: wrap;
 }
+
+.formHeader {
+    background-color: var(--header-color);
+    color: var(--text);
+    padding: 4px;
+}

@@ -10,6 +10,11 @@ import ExpandingText from "../../atoms/expanding_text/ExpandingText.tsx";
 import SideForm from "../../organisms/side_form/SideForm.tsx";
 import {useState} from "react";
 import SubtargetNode from "../../molecules/subtarget/SubtargetNode.tsx";
+import PaginationList from "../../templates/pagination_list/PaginationList.tsx";
+import {Dialog} from "primereact/dialog";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../../../store/store.ts";
+import {formActions} from "../../../../store/form_slice.ts";
 
 export interface openProps {
     isOpen: boolean;
@@ -20,6 +25,9 @@ export interface openProps {
 
 const StepByStepDetailPage = () => {
     const { id } = useParams();
+    const visible = useSelector((state: RootState) => state.form.state);
+    const formTitle = useSelector((state: RootState) => state.form.title);
+    const dispatchActions = useDispatch();
     const [open, setOpen] = useState<openProps>({
         isOpen: false,
         type: "subtarget",
@@ -39,7 +47,22 @@ const StepByStepDetailPage = () => {
         return <Error message={"Ошибка загрузки данных"} />;
     }
 
+    const onHideHandler = () => {
+        dispatchActions(formActions.onHide())
+    }
+
     return <Card className={styles.stepByStepDetailPage}>
+        <Dialog
+            header={`Действия по цели: ${formTitle}`}
+            headerClassName={styles.formHeader}
+            visible={visible}
+            onHide={() => onHideHandler()}
+            modal
+            ariaCloseIconLabel={"Закрыть"}
+            closeOnEscape={true}
+            dismissableMask={true}
+            children={<PaginationList />
+        }/>
         <div className={styles.wrapper}>
             <div>
                 <h4>{data.title}</h4>

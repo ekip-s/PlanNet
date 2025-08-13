@@ -6,6 +6,8 @@ import IconButton from "../../atoms/btns/IconButton.tsx";
 import {openProps} from "../../pages/step_by_step/StepByStepDetailPage.tsx";
 import {send} from "../../../api/sendHTTP.tsx";
 import {useAuth} from "../../../../keycloak/AuthContext.tsx";
+import {useDispatch} from "react-redux";
+import {formActions} from "../../../../store/form_slice.ts";
 
 interface SubtargetNodeProps {
     subtarget: TargetModel;
@@ -16,6 +18,7 @@ interface SubtargetNodeProps {
 const SubtargetNode = ({subtarget, setOpen, refresh}: SubtargetNodeProps) => {
 
     const {getToken} = useAuth();
+    const dispatchActions = useDispatch();
     const addAction =() => {
         setOpen({
             isOpen: true,
@@ -47,14 +50,33 @@ const SubtargetNode = ({subtarget, setOpen, refresh}: SubtargetNodeProps) => {
             .then(refresh)
     }
 
+    const setVisible = () => {
+
+        dispatchActions(formActions.setFormData({
+            type: "actions",
+            id: subtarget.id,
+            state: true,
+            title: subtarget.title
+        }
+        ))
+    }
+
     return <div className={styles.subtargetNode}>
         <div className={styles.subtargetTop}>
             <h5>{subtarget.title}</h5>
             {<TargetStatus status={subtarget.status} />}
         </div>
-        <ExpandingText text={subtarget.description} displayedLength={50} label={"Описание:"} />
+        <div className={styles.expandingText}>
+            <ExpandingText text={subtarget.description} displayedLength={50} label={"Описание:"} />
+        </div>
         <div className={styles.stats}></div>
         <div className={styles.btn}>
+            <IconButton
+                condition={undefined}
+                icon={"pi-eye"}
+                label={"Посмотреть действия"}
+                onClick={() => {setVisible()}}
+            />
             <IconButton
                 condition={subtarget.status != "COMPLETED" && subtarget.status != "CANCELED"}
                 icon={"pi-file-plus"}
@@ -69,7 +91,7 @@ const SubtargetNode = ({subtarget, setOpen, refresh}: SubtargetNodeProps) => {
                 className={styles.toInProgress}
             />
             <IconButton
-                condition={subtarget.status != "COMPLETED"}
+                condition={subtarget.status != "COMPLETED" && subtarget.status != "CANCELED"}
                 icon={"pi-times"}
                 label={"Отменить цель"}
                 onClick={canceledHandler}
