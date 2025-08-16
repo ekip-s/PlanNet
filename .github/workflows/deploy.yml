@@ -26,9 +26,9 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             export DEBIAN_FRONTEND=noninteractive
-            echo $CERTBOT_DOMAINS
-            echo $CERTBOT_EMAIL
-            echo $MAIN_DOMAIN
+            echo ывыв $CERTBOT_DOMAINS
+            echo ывыв $CERTBOT_EMAIL
+            echo ывыв $MAIN_DOMAIN
             
             #docker setup
             sudo apt-get update
