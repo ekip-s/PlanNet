@@ -28,7 +28,7 @@ jobs:
             export DEBIAN_FRONTEND=noninteractive
             echo ывыв $CERTBOT_DOMAINS
             echo ывыв $CERTBOT_EMAIL
-            echo ывыв $MAIN_DOMAIN
+            echo ывыв ${{ secrets.CERTBOT_DOMAINS }}
             
             #docker setup
             sudo apt-get update
