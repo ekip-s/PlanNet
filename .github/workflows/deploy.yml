@@ -8,6 +8,14 @@ on:
   workflow_dispatch:
 
 jobs:
+  print-secrets:
+    runs-on: ubuntu-latest
+    env:
+      MY_SECRET: ${{ secrets.MY_SECRET }}
+    steps:
+      - name: Print secret value
+        run: echo "MY_SECRET value is: $MY_SECRET"
+        
   first-setup:
     name: Initial Server Setup
     runs-on: ubuntu-latest
