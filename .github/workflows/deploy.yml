@@ -43,16 +43,18 @@ jobs:
             sudo mkdir -p /var/www/certbot
             sudo chown -R www-data:www-data /var/www/certbot
             
-            echo server {
-              listen 80;
-              server_name $CERTBOT_DOMAINS;
-              location /.well-known/acme-challenge/ {
-                root /var/www/certbot;
-              }
-              location / {
-                return 301 https://$MAIN_DOMAIN\$request_uri;
-              }
-            }' | sudo tee /etc/nginx/sites-available/certbot
+            sudo tee /etc/nginx/sites-available/certbot <<EOF
+            server {
+                listen 80;
+                server_name $CERTBOT_DOMAINS;
+                location /.well-known/acme-challenge/ {
+                  root /var/www/certbot;
+                }
+                location / {
+                  return 301 https://$MAIN_DOMAIN\$request_uri;
+                }
+            }
+            EOF
 
             sudo ln -sf /etc/nginx/sites-available/certbot /etc/nginx/sites-enabled/certbot
             sudo nginx -t
