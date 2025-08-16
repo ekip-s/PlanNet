@@ -9,16 +9,16 @@ on:
 
 jobs:
   first-setup:
-    env:
-          CERTBOT_EMAIL: ${{ secrets.CERTBOT_EMAIL }}
-          CERTBOT_DOMAINS: ${{ secrets.CERTBOT_DOMAINS }}
-          MAIN_DOMAIN: ${{ secrets.MAIN_DOMAIN}}
     name: Initial Server Setup
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'workflow_dispatch' }}
     steps:
       - name: SSH and run certbot tasks
         uses: appleboy/ssh-action@master
+        env:
+          CERTBOT_EMAIL: ${{ secrets.CERTBOT_EMAIL }}
+          CERTBOT_DOMAINS: ${{ secrets.CERTBOT_DOMAINS }}
+          MAIN_DOMAIN: ${{ secrets.MAIN_DOMAIN}}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
@@ -26,9 +26,9 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             export DEBIAN_FRONTEND=noninteractive
-            echo "CERTBOT_DOMAINS=$CERTBOT_DOMAINS"
-            echo "CERTBOT_EMAIL=$CERTBOT_EMAIL"
-            echo "MAIN_DOMAIN=$MAIN_DOMAIN"
+            echo "CERTBOT_DOMAINS='$CERTBOT_EMAIL'"
+            echo "CERTBOT_EMAIL='$CERTBOT_DOMAINS'"
+            echo "MAIN_DOMAIN='$MAIN_DOMAIN'"
             
             #docker setup
             sudo apt-get update
