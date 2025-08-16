@@ -21,24 +21,74 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
+            export DEBIAN_FRONTEND=noninteractive
+            
             #docker setup
-            sudo apt update
-            sudo apt install apt-transport-https ca-certificates curl software-properties-common
+            sudo apt-get update
+            sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
             curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
             echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+            sudo apt-get update
+            sudo apt-get install -y docker-ce
+
+            #nginx
+            sudo apt-get update
+            sudo apt-get install -y nginx certbot
+
+            # Настройка nginx для certbot challenges
+            sudo mkdir -p /var/www/certbot/.well-known/acme-challenge
+            sudo chown -R www-data:www-data /var/www/certbot
+            sudo chmod -R 755 /var/www/certbot
+            
+            sudo tee /etc/nginx/sites-available/certbot <<EOF
+            server {
+                listen 80;
+                listen [::]:80;
+                server_name ${{ secrets.CERTBOT_DOMAINS }};
+                location /.well-known/acme-challenge/ {
+                  root /var/www/certbot;
+                }
+                location / {
+                  return 301 https://${{ secrets.MAIN_DOMAIN }}\$request_uri;
+                }
+            }
+            EOF
+
+            sudo ln -sf /etc/nginx/sites-available/certbot /etc/nginx/sites-enabled/certbot
+            sudo rm /etc/nginx/sites-enabled/default
+            sudo nginx -t
+            sudo systemctl restart nginx
+
+            # Получение сертификатов
+            DOMAIN_ARGS=""
+            for d in ${{ secrets.CERTBOT_DOMAINS }}; do
+              DOMAIN_ARGS+=" -d $d"
+            done
+
+            sudo certbot certonly --webroot -w /var/www/certbot \
+              --email "${{ secrets.CERTBOT_EMAIL }}" \
+              --agree-tos \
+              --no-eff-email \
+              --non-interactive \
+              $DOMAIN_ARGS
+
+            # Очистка
+            sudo systemctl stop nginx
+            sudo apt-get remove -y nginx
+            sudo apt-get autoremove -y
+
+            #git
             sudo apt update
-            sudo apt install docker-ce
-
-
+            sudo apt install -y git
+            git clone https://github.com/ekip-s/PlanNet.git
+            
+            
   certbot-renew:
     name: Issue or Renew Certificates
     runs-on: ubuntu-latest
     steps:
       - name: SSH and run certbot tasks
         uses: appleboy/ssh-action@master
-        env:
-          CERTBOT_EMAIL: ${{ secrets.CERTBOT_EMAIL }}
-          CERTBOT_DOMAINS: ${{ secrets.CERTBOT_DOMAINS }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
@@ -59,16 +109,15 @@ jobs:
             docker volume create cert_data || true
 
             # 3. Prepare domain args
-            DOMAIN_ARGS=""
-            for d in $(echo "$CERTBOT_DOMAINS" | tr ',' ' '); do
-              DOMAIN_ARGS+=" -d $d";
+            for d in ${{ secrets.CERTBOT_DOMAINS }}; do
+              DOMAIN_ARGS+=" -d $d"
             done
 
             # 4. Issue or renew certificates
             docker compose -f docker-compose.prod.yml run --rm certbot certonly \
               --webroot --webroot-path=/var/www/certbot \
               --agree-tos --no-eff-email \
-              --email "$CERTBOT_EMAIL" \
+              --email "${{ secrets.CERTBOT_EMAIL }}" \
               $DOMAIN_ARGS || true
 
             # 5. Reload nginx to pick up new certificates
