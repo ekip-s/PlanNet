@@ -42,7 +42,8 @@ jobs:
             # Настройка nginx для certbot challenges
             sudo mkdir -p /var/www/certbot
             sudo chown -R www-data:www-data /var/www/certbot
-            server {
+            
+            echo server {
               listen 80;
               server_name $CERTBOT_DOMAINS;
               location /.well-known/acme-challenge/ {
