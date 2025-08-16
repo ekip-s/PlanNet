@@ -11,10 +11,6 @@ jobs:
   first-setup:
     name: Initial Server Setup
     runs-on: ubuntu-latest
-    env:
-      CERTBOT_EMAIL: ${{ secrets.CERTBOT_EMAIL }}
-      CERTBOT_DOMAINS: ${{ secrets.CERTBOT_DOMAINS }}
-      MAIN_DOMAIN: ${{ secrets.MAIN_DOMAIN }}
     if: ${{ github.event_name == 'workflow_dispatch' }}
     steps:
       - name: SSH and run certbot tasks
@@ -26,9 +22,6 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             export DEBIAN_FRONTEND=noninteractive
-            echo ывыв $CERTBOT_DOMAINS
-            echo ывыв $CERTBOT_EMAIL
-            echo ывыв ${{ secrets.CERTBOT_DOMAINS }}
             
             #docker setup
             sudo apt-get update
@@ -49,12 +42,12 @@ jobs:
             sudo tee /etc/nginx/sites-available/certbot <<EOF
             server {
                 listen 80;
-                server_name $CERTBOT_DOMAINS;
+                server_name ${{ secrets.CERTBOT_DOMAINS }};
                 location /.well-known/acme-challenge/ {
                   root /var/www/certbot;
                 }
                 location / {
-                  return 301 https://$MAIN_DOMAIN\$request_uri;
+                  return 301 https://${{ secrets.MAIN_DOMAIN }}\$request_uri;
                 }
             }
             EOF
@@ -64,12 +57,12 @@ jobs:
             sudo systemctl restart nginx
 
             DOMAIN_ARGS=""
-            for d in $CERTBOT_DOMAINS; do
+            for d in ${{ secrets.CERTBOT_DOMAINS }}; do
               DOMAIN_ARGS+=" -d $d"
             done
 
             # Получение сертификатов через certbot (webroot)
-            sudo certbot certonly --webroot -w /var/www/certbot --email "$CERTBOT_EMAIL" --agree-tos --no-eff-email --non-interactive $DOMAIN_ARGS
+            sudo certbot certonly --webroot -w /var/www/certbot --email "${{ secrets.CERTBOT_EMAIL }}" --agree-tos --no-eff-email --non-interactive $DOMAIN_ARGS
 
             # Остановка и удаление nginx (чтобы не мешал следующему запуску в контейнере)
             sudo systemctl stop nginx
@@ -82,9 +75,6 @@ jobs:
     steps:
       - name: SSH and run certbot tasks
         uses: appleboy/ssh-action@master
-        env:
-          CERTBOT_EMAIL: ${{ secrets.CERTBOT_EMAIL }}
-          CERTBOT_DOMAINS: ${{ secrets.CERTBOT_DOMAINS }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
@@ -105,7 +95,7 @@ jobs:
             docker volume create cert_data || true
 
             # 3. Prepare domain args
-            for d in $CERTBOT_DOMAINS; do
+            for d in ${{ secrets.CERTBOT_DOMAINS }}; do
               DOMAIN_ARGS+=" -d $d"
             done
 
@@ -113,7 +103,7 @@ jobs:
             docker compose -f docker-compose.prod.yml run --rm certbot certonly \
               --webroot --webroot-path=/var/www/certbot \
               --agree-tos --no-eff-email \
-              --email "$CERTBOT_EMAIL" \
+              --email "${{ secrets.CERTBOT_EMAIL }}" \
               $DOMAIN_ARGS || true
 
             # 5. Reload nginx to pick up new certificates
