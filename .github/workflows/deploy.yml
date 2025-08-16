@@ -15,6 +15,10 @@ jobs:
     steps:
       - name: SSH and run certbot tasks
         uses: appleboy/ssh-action@master
+        env:
+          CERTBOT_EMAIL: ${{ secrets.CERTBOT_EMAIL }}
+          CERTBOT_DOMAINS: ${{ secrets.CERTBOT_DOMAINS }}
+          MAIN_DOMAIN: ${{ secrets.MAIN_DOMAIN}}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
@@ -31,6 +35,40 @@ jobs:
             sudo apt-get update
             sudo apt-get install -y docker-ce
 
+            #nginx
+            sudo apt-get update
+            sudo apt-get install -y nginx certbot
+
+            # Настройка nginx для certbot challenges
+            sudo mkdir -p /var/www/certbot
+            sudo chown -R www-data:www-data /var/www/certbot
+            server {
+              listen 80;
+              server_name $CERTBOT_DOMAINS;
+              location /.well-known/acme-challenge/ {
+                root /var/www/certbot;
+              }
+              location / {
+                return 301 https://$MAIN_DOMAIN\$request_uri;
+              }
+            }' | sudo tee /etc/nginx/sites-available/certbot
+
+            sudo ln -sf /etc/nginx/sites-available/certbot /etc/nginx/sites-enabled/certbot
+            sudo nginx -t
+            sudo systemctl restart nginx
+
+            DOMAIN_ARGS=""
+            for d in $CERTBOT_DOMAINS; do
+              DOMAIN_ARGS+=" -d $d"
+            done
+
+            # Получение сертификатов через certbot (webroot)
+            sudo certbot certonly --webroot -w /var/www/certbot --email "$CERTBOT_EMAIL" --agree-tos --no-eff-email --non-interactive $DOMAIN_ARGS
+
+            # Остановка и удаление nginx (чтобы не мешал следующему запуску в контейнере)
+            sudo systemctl stop nginx
+            sudo apt-get remove -y nginx
+            sudo apt-get autoremove -y
 
   certbot-renew:
     name: Issue or Renew Certificates
