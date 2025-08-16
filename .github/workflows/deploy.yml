@@ -99,9 +99,8 @@ jobs:
             docker volume create cert_data || true
 
             # 3. Prepare domain args
-            DOMAIN_ARGS=""
-            for d in $(echo "$CERTBOT_DOMAINS" | tr ',' ' '); do
-              DOMAIN_ARGS+=" -d $d";
+            for d in $CERTBOT_DOMAINS; do
+              DOMAIN_ARGS+=" -d $d"
             done
 
             # 4. Issue or renew certificates
