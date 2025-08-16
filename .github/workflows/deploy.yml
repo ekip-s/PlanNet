@@ -38,6 +38,8 @@ jobs:
             # Настройка nginx для certbot challenges
             sudo mkdir -p /var/www/certbot
             sudo chown -R www-data:www-data /var/www/certbot
+
+            echo "CERTBOT_DOMAINS: '${{ secrets.CERTBOT_DOMAINS }}'"
             
             sudo tee /etc/nginx/sites-available/certbot <<EOF
             server {
