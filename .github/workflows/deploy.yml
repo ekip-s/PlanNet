@@ -11,6 +11,7 @@ jobs:
   first-setup:
     name: Initial Server Setup
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' }}
     steps:
       - name: SSH and run certbot tasks
         uses: appleboy/ssh-action@master
