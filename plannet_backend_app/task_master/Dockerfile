@@ -1,6 +1,4 @@
-FROM openjdk:21-jdk-slim AS build
-
-RUN apt-get update && apt-get install -y maven
+FROM maven:3.9.9-eclipse-temurin-21 AS build
 
 COPY plannet_backend_app/ /app
 WORKDIR /app
