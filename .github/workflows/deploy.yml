@@ -32,8 +32,13 @@ jobs:
             sudo apt-get install -y docker-ce
 
             #nginx
-            sudo apt-get update
-            sudo apt-get install -y nginx certbot
+            sudo apt-get install -y nginx
+
+            # Install snapd and certbot via snap
+            sudo apt-get install -y snapd
+            sudo snap install core; sudo snap refresh core
+            sudo snap install --classic certbot
+            sudo ln -sf /snap/bin/certbot /usr/bin/certbot
 
             # Настройка nginx для certbot challenges
             sudo mkdir -p /var/www/certbot/.well-known/acme-challenge
@@ -55,17 +60,17 @@ jobs:
             EOF
 
             sudo ln -sf /etc/nginx/sites-available/certbot /etc/nginx/sites-enabled/certbot
-            sudo rm /etc/nginx/sites-enabled/default
+            sudo rm -f /etc/nginx/sites-enabled/default
             sudo nginx -t
             sudo systemctl restart nginx
 
             # Получение сертификатов
+            # Obtain certificates with certbot snap version
             DOMAIN_ARGS=""
             for d in ${{ secrets.CERTBOT_DOMAINS }}; do
               DOMAIN_ARGS+=" -d $d"
             done
-
-            sudo certbot certonly --webroot -w /var/www/certbot \
+            sudo certbot --nginx \
               --email "${{ secrets.CERTBOT_EMAIL }}" \
               --agree-tos \
               --no-eff-email \
@@ -75,13 +80,15 @@ jobs:
             # Очистка
             sudo systemctl stop nginx
             sudo apt-get remove -y nginx
-            sudo apt-get autoremove -y
 
             #git
             sudo apt update
             sudo apt install -y git
-            git clone https://github.com/ekip-s/PlanNet.git
-            
+            if [ ! -d "PlanNet" ]; then
+              git clone https://github.com/ekip-s/PlanNet.git
+            else
+              echo "Репозиторий PlanNet уже существует, пропускаем клонирование."
+            fi            
             
   certbot-renew:
     name: Issue or Renew Certificates
