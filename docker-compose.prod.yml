@@ -40,9 +40,7 @@ services:
     build:
       context: .
       dockerfile: plannet_backend_app/task_master/Dockerfile
-    dns:
-      - 8.8.8.8
-      - 1.1.1.1  
+      network: host
     depends_on:
       - task_master_db
     environment:
