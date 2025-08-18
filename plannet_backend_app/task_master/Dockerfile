@@ -1,12 +1,18 @@
 FROM openjdk:21-jdk-slim AS build
 
-RUN set -eux; \
-    sed -i 's|deb.debian.org|cdn-aws.deb.debian.org|g' /etc/apt/sources.list && \
-    sleep 10; \
-    for i in {1..10}; do \
-        apt-get update && break || sleep 30; \
-    done; \
-    apt-get install -y --no-install-recommends maven
+# Установка необходимых утилит
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    wget \
+    tar \
+    gzip \
+    && rm -rf /var/lib/apt/lists/*
+
+# Установка Maven вручную
+ARG MAVEN_VERSION=3.9.6
+RUN wget -O /tmp/maven.tar.gz https://dlcdn.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz && \
+    tar -xzf /tmp/maven.tar.gz -C /opt && \
+    ln -s /opt/apache-maven-${MAVEN_VERSION}/bin/mvn /usr/bin/mvn && \
+    rm /tmp/maven.tar.gz
 
 COPY plannet_backend_app/ /app
 WORKDIR /app
