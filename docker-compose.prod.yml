@@ -16,6 +16,7 @@ services:
     build:
       context: .
       dockerfile: plannet_front_app/Dockerfile
+      network: host
     expose:
       - "5173"
     restart: always
