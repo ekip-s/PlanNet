@@ -13,5 +13,5 @@ CREATE TABLE if not exists tasks (
   updated_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
-CREATE INDEX idx_tasks_group_status ON tasks(group_id, status);
-CREATE INDEX idx_tasks_assignee_status ON tasks(assignee_id, status);
+CREATE INDEX if not exists idx_tasks_group_status ON tasks(group_id, status);
+CREATE INDEX if not exists idx_tasks_assignee_status ON tasks(assignee_id, status);
