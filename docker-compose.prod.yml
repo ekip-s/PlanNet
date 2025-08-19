@@ -37,6 +37,19 @@ services:
     networks: 
       - task-master-network    
 
+  step_by_step_db:
+    image: postgres:16.2
+    container_name: step_by_step_db
+    environment:
+      - POSTGRES_DB=${STEP_BY_STEP_DB}
+      - POSTGRES_USER=${STEP_BY_STEP_USER}
+      - POSTGRES_PASSWORD=${STEP_BY_STEP_PASSWORD}
+    volumes:
+      - postgresdata_step:/var/lib/postgresql/data
+    restart: always 
+    networks: 
+      - step_by_step_network     
+
   task_master:
     build:
       context: .
@@ -55,7 +68,27 @@ services:
       - main-network
       - keycloak-main-network
       - task-master-network
-    restart: always     
+    restart: always  
+
+  step_by_step:
+    build:
+      context: .
+      dockerfile: plannet_backend_app/step_by_step/Dockerfile
+      network: host
+    depends_on:
+      - step_by_step_db
+    environment:
+      - ENV=${ENV}
+      - TASK_MASTER_PORT=${TASK_MASTER_PORT}
+      - TASK_MASTER_DB=${STEP_BY_STEP_DB}
+      - TASK_MASTER_POSTGRES_USER=${STEP_BY_STEP_USER}
+      - TASK_MASTER_POSTGRES_PASSWORD=${STEP_BY_STEP_PASSWORD}
+      - SWAGGER_CLIENT_SECRET=${SWAGGER_CLIENT_SECRET}
+    networks:
+      - main-network
+      - keycloak-main-network
+      - step_by_step_network
+    restart: always       
 
   keycloak-db:
     image: postgres:16.2
@@ -114,6 +147,7 @@ volumes:
   cert_data:
   postgresdata:  
   postgresdata_task:  
+  postgresdata_step:  
 
 networks:
   main-network:
@@ -125,3 +159,5 @@ networks:
     internal: false
   task-master-network:
     driver: bridge  
+  step_by_step_network:  
+    driver: bridge
