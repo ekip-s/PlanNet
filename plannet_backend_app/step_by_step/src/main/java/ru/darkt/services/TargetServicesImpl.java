@@ -1,6 +1,9 @@
 package ru.darkt.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.darkt.ConflictException;
@@ -78,6 +81,13 @@ public class TargetServicesImpl implements TargetServices {
         TargetDetailResponse detailResponse = targetMapper.toDetailResponse(target);
         detailResponse.setSubtarget(targetMapper.toResponseList(targets));
         return detailResponse;
+    }
+
+    @Override
+    public Page<TargetResponse> getActionList(UUID targetId, Pageable pageable) {
+        return targetRepository
+                        .findAllByUserIdAndParent(tokenService.getCurrentUserId(),
+                                new Target(targetId), pageable).map(targetMapper::toResponse);
     }
 
     private void createNewTarget(CreateTargetRequest request) {

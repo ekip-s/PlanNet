@@ -1,6 +1,5 @@
 import styles from "./StepByStepDetailPage.module.css";
 import {useParams} from "react-router";
-import Card from "../../molecules/card/Card.tsx";
 import useApi from "../../../api/useApi.tsx";
 import Loading from "../../molecules/loading/Loading.tsx";
 import Error from "../../molecules/error/Error.tsx";
@@ -15,6 +14,8 @@ import {Dialog} from "primereact/dialog";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/store.ts";
 import {formActions} from "../../../../store/form_slice.ts";
+import Close from "../../atoms/close/Close.tsx";
+import {Card} from "primereact/card";
 
 export interface openProps {
     isOpen: boolean;
@@ -51,7 +52,7 @@ const StepByStepDetailPage = () => {
         dispatchActions(formActions.onHide())
     }
 
-    return <Card className={styles.stepByStepDetailPage}>
+    return <div className={styles.stepByStepDetailPage}>
         <Dialog
             header={`Действия по цели: ${formTitle}`}
             headerClassName={styles.formHeader}
@@ -63,13 +64,18 @@ const StepByStepDetailPage = () => {
             dismissableMask={true}
             children={<PaginationList />
         }/>
-        <div className={styles.wrapper}>
-            <div>
-                <h4>{data.title}</h4>
-                <ExpandingText text={data.description} label={"Описание:"} displayedLength={50} />
+        <Card className={styles.card}>
+            <div className={styles.wrapper}>
+                <div>
+                    <div className={styles.wrapper}>
+                        <h4>{data.title}</h4>
+                        <TargetStatus status={data.status} />
+                    </div>
+                    <ExpandingText text={data.description} label={"Описание:"} displayedLength={50} />
+                </div>
+                <Close name={"Закрыть страницу"} page={"/stepByStep"} />
             </div>
-            <TargetStatus status={data.status} />
-        </div>
+        </Card>
         <div className={styles.subtargets}>
             {data.subtarget.map((item, index) => (
                 <SubtargetNode
@@ -86,7 +92,7 @@ const StepByStepDetailPage = () => {
             targetParentId={data.id}
             refresh={refresh}
         />
-    </Card>
+    </div>
 }
 
 export default StepByStepDetailPage;

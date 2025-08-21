@@ -28,3 +28,9 @@
 .nodeList {
     margin-top: 10px;
 }
+
+.card {
+    border-radius: var(--btn-radius-small);
+    background-color: var(--main-form-color);
+    padding: 3px;
+}

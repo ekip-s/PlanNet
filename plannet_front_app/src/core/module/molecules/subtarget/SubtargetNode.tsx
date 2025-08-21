@@ -8,6 +8,7 @@ import {send} from "../../../api/sendHTTP.tsx";
 import {useAuth} from "../../../../keycloak/AuthContext.tsx";
 import {useDispatch} from "react-redux";
 import {formActions} from "../../../../store/form_slice.ts";
+import {Card} from "primereact/card";
 
 interface SubtargetNodeProps {
     subtarget: TargetModel;
@@ -61,7 +62,7 @@ const SubtargetNode = ({subtarget, setOpen, refresh}: SubtargetNodeProps) => {
         ))
     }
 
-    return <div className={styles.subtargetNode}>
+    return <Card className={styles.subtargetNode}>
         <div className={styles.subtargetTop}>
             <h5>{subtarget.title}</h5>
             {<TargetStatus status={subtarget.status} />}
@@ -98,7 +99,7 @@ const SubtargetNode = ({subtarget, setOpen, refresh}: SubtargetNodeProps) => {
                 className={styles.toCanceled}
             />
         </div>
-    </div>
+    </Card>
 }
 
 export default SubtargetNode;

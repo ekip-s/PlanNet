@@ -8,6 +8,7 @@ import {TargetModel} from "../../../models/TargetModel.tsx";
 import Loading from "../../molecules/loading/Loading.tsx";
 import Error from "../../molecules/error/Error.tsx";
 import TargetNode from "../../molecules/target/TargetNode.tsx";
+import {Card} from "primereact/card";
 
 const StepByStepPage = () => {
 
@@ -48,22 +49,24 @@ const StepByStepPage = () => {
     }
 
     return <section className={style.stepByStepPage}>
-        <div className={style.btnWrapper}>
-            <div className={style.info}>
-                <h3>Step By Step</h3>
-                <p>Шаг за шагом двигайся к цели</p>
+        <Card className={style.card}>
+            <div className={style.btnWrapper}>
+                <div className={style.info}>
+                    <h3>Step By Step</h3>
+                    <p>Шаг за шагом двигайся к цели</p>
+                </div>
+                <div className={style.rightMobile}>
+                    <Dropdown
+                        className={style.dropdown}
+                        value={filter}
+                        onChange={(e) => setFilter(e.value)}
+                        options={filters}
+                        optionLabel="name"
+                    />
+                    <Button type={"button"} text={"Новая цель"} onClick={newTargetHandler}/>
+                </div>
             </div>
-            <div className={style.rightMobile}>
-                <Dropdown
-                    className={style.dropdown}
-                    value={filter}
-                    onChange={(e) => setFilter(e.value)}
-                    options={filters}
-                    optionLabel="name"
-                />
-                <Button type={"button"} text={"Новая цель"} onClick={newTargetHandler}/>
-            </div>
-        </div>
+        </Card>
         <div className={style.nodeList}>
             {filteredData.map((item:TargetModel) => (<TargetNode key={item.id} target={item} />))}
         </div>

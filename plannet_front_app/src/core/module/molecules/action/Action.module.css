@@ -1,0 +1,13 @@
+.action {
+    background-color: var(--main-form-color);
+    padding: 4px;
+    border-radius: var(--btn-radius-small);
+    margin-top: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.action div {
+    color: var(--text);
+}

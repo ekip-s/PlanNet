@@ -15,6 +15,7 @@ interface ApiConfig {
     method?: HttpMethod;
     body?: object | null;
     headers?: Record<string, string>;
+    visible?: boolean;
 }
 
 interface UseApiResponse<T> {
@@ -31,6 +32,7 @@ const useApi = <T = unknown,>({
                                   method = 'GET',
                                   body = null,
                                   headers = {},
+                                  visible = true,
                               }: ApiConfig): UseApiResponse<T> => {
     const { getToken } = useAuth();
     const [data, setData] = useState<T | []>([]);
@@ -101,6 +103,11 @@ const useApi = <T = unknown,>({
     }, [url, service, method]);
 
     useEffect(() => {
+        if (!visible) {
+            setLoading(false);
+            return;
+        }
+
         const controller = new AbortController();
         isMounted.current = true;
 
@@ -110,7 +117,7 @@ const useApi = <T = unknown,>({
             isMounted.current = false;
             controller.abort();
         };
-    }, [fetchData]);
+    }, [fetchData, visible]);
 
     const refresh = useCallback(() => {
         const controller = new AbortController();

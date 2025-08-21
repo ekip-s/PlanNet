@@ -4,6 +4,12 @@
     margin-left: var(--indentation);
 }
 
+.card {
+    border-radius: var(--btn-radius-small);
+    background-color: var(--main-form-color);
+    padding: 3px;
+}
+
 .wrapper {
     display: flex;
     align-items: center;
@@ -29,4 +35,5 @@
     background-color: var(--header-color);
     color: var(--text);
     padding: 4px;
+    gap: 20px
 }
