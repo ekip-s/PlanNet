@@ -1,5 +1,7 @@
 package ru.darkt.services;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import ru.darkt.models.CreateTargetRequest;
 import ru.darkt.models.TargetDetailResponse;
 import ru.darkt.models.TargetResponse;
@@ -15,4 +17,5 @@ public interface TargetServices {
     void deleteTargetById(UUID targetId);
     List<TargetResponse> getAllTarget(TargetStatus status);
     TargetDetailResponse getDetailTarget(UUID targetId);
+    Page<TargetResponse> getActionList(UUID targetId, Pageable pageable);
 }

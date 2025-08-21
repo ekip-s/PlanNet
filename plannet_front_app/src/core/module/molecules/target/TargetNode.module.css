@@ -1,11 +1,15 @@
 .targetNode {
     margin-bottom: 10px;
+    border-radius: var(--btn-radius-small);
+    background-color: var(--main-form-color);
+    padding: 3px;
 }
 
 .cardTop {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin-bottom: 8px;
 }
 
 .cardTop h4 {
@@ -22,8 +26,8 @@
 }
 
 .new {
-    background-color: gray;
-    border-color: gray;
+    background-color: rgba(97, 97, 97, 0.94);
+    border-color: rgba(97, 97, 97, 0.94);
 }
 
 .in_progress {

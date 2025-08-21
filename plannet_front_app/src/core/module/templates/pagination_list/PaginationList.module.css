@@ -1,3 +1,7 @@
 .paginationList {
     background-color: var(--app-main-color);
 }
+
+.nodeMode {
+    padding: 7px;
+}

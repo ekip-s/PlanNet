@@ -4,7 +4,7 @@ export interface TargetModel {
     status: string;
     title: string;
     description: string | null;
-    createdAt: Date;
+    createdAt: string;
 }
 
 export interface TargetDetailModel {
@@ -15,4 +15,16 @@ export interface TargetDetailModel {
     description: string | null;
     createdAt: Date;
     subtarget: TargetModel[];
+}
+
+export interface PageTargetModel {
+    _embedded: {
+        targetResponseList: TargetModel[];
+    },
+    page: {
+        size: number
+        totalElements: number;
+        totalPages: number;
+        number: number;
+    }
 }

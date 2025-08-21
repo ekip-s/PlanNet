@@ -83,7 +83,7 @@ public class Target {
         }
 
         if (this.type.equals(TargetType.action)) {
-            this.status = TargetStatus.CANCELED;
+            this.status = TargetStatus.COMPLETED;
         } else {
             this.status = TargetStatus.NEW;
         }

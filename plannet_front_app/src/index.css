@@ -2,6 +2,7 @@
     --header-color: #373739;
     --app-main-color: #565658;
     --color-shadow: rgba(205, 205, 205, 0.35);
+    --main-form-color: #7A7A7C;
 
     --shadow-sm: 1px 1px 7px 1px var(--color-shadow);
     --shadow-md: 1 4px 8px var(--color-shadow);

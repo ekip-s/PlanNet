@@ -1,5 +1,7 @@
 package ru.darkt.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -25,4 +27,7 @@ public interface TargetRepository extends JpaRepository<Target, UUID>  {
                                                                              @Param("type") TargetType type,
                                                                              @Param("parent") Target target);
 
+    Page<Target> findAllByUserIdAndParent(@Param("userId") UUID userId,
+                                                             @Param("parent") Target target,
+                                                             Pageable pageable);
 }

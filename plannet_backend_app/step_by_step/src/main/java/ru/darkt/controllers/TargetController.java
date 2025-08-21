@@ -4,6 +4,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.web.bind.annotation.*;
 import ru.darkt.models.CreateTargetRequest;
 import ru.darkt.models.TargetDetailResponse;
@@ -22,6 +28,8 @@ import java.util.UUID;
 public class TargetController {
 
     private final TargetServices targetServices;
+    private final PagedResourcesAssembler<TargetResponse> pagedResourcesAssembler;
+
 
     @Operation(
             summary = "Создать цель",
@@ -71,6 +79,16 @@ public class TargetController {
     public TargetDetailResponse getDetailTarget(@PathVariable UUID targetId) {
         log.info("GET: TargetController getDetailTarget, параметры: {}", targetId);
         return targetServices.getDetailTarget(targetId);
+    }
+
+    @Operation(
+            summary = "Действия по задаче",
+            description = "Возвращает действия по цели с пагинацией"
+    )
+    @GetMapping("/{targetId}/action")
+    public PagedModel<EntityModel<TargetResponse>> getActionList(@PathVariable UUID targetId, @ParameterObject Pageable pageable) {
+        log.info("GET: TargetController getActionList, параметры: {}", targetId);
+        return pagedResourcesAssembler.toModel(targetServices.getActionList(targetId, pageable));
     }
     //при завершении/отмене цели -> завершаем/отменяем подзадачи, сделаем через шедулер;
 }
