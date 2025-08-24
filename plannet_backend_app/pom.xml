@@ -21,6 +21,7 @@
         <module>task_master</module>
         <module>groups_manager</module>
         <module>step_by_step</module>
+        <module>power_plan</module>
     </modules>
 
     <properties>

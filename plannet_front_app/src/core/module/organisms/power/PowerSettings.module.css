@@ -1,0 +1,16 @@
+.powerSettings form {
+    margin-top: 10px;
+}
+
+.powerSettings h4 {
+    color: var(--text);
+    margin-bottom: 5px;
+}
+
+.powerSettings label {
+    color: var(--text);
+}
+
+.inputToken {
+    padding: 3px;
+}

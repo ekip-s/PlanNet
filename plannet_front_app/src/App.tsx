@@ -17,6 +17,8 @@ import NewTask from "./core/module/organisms/new_task/NewTask.tsx";
 import StepByStepPage from "./core/module/pages/step_by_step/StepByStepPage.tsx";
 import NewTargetPage from "./core/module/pages/step_by_step/NewTargetPage.tsx";
 import StepByStepDetailPage from "./core/module/pages/step_by_step/StepByStepDetailPage.tsx";
+import PowerPlan from "./core/module/pages/power_plan/PowerPlan.tsx";
+import PowerSettings from "./core/module/organisms/power/PowerSettings.tsx";
 
 const App = () =>  {
   return (
@@ -38,7 +40,9 @@ const App = () =>  {
                           <Route path="/profile" element={<Profile />}>
                               <Route path="group" element={<GroupManager />} />
                               <Route path="group/join/:code" element={<JoinGroup />} />
+                              <Route path="power" element={<PowerSettings />}/>
                           </Route>
+                          <Route path={"/powerPlan"} element={<PowerPlan />} />
                       </Route>
                   </Routes>
               </main>

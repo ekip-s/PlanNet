@@ -9,7 +9,7 @@ type RequestOptions<T = unknown> = {
     token?: string | null;
     headers?: HeadersInit;
     setDataInfo?: (data: T) => void;
-    dataType?: 'json' | 'string' | 'not';
+    dataType?: 'json' | 'string' | 'boolean' | 'not';
     setLoading?: (loading: boolean) => void;
     setError?: (error: string | '') => void;
 };
@@ -55,6 +55,9 @@ const send = async <T = unknown,>({
             result = await response.text();
         } else if (dataType === 'json') {
             result = (await response.json()) as T;
+        } else if (dataType === 'boolean') {
+            const text = await response.text();
+            result = (text.toLowerCase() === 'true') as unknown as T;
         } else {
             result = ""
         }
