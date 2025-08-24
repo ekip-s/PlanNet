@@ -8,8 +8,21 @@ const Profile = () => {
     const navigate = useNavigate();
 
     const items = [
-        { label: 'Основная страница', icon: 'pi pi-home', command: () => {navigate("/profile")} },
-        { label: 'Управление группами', icon: 'pi pi-home', command: () => {navigate("/profile/group")} },
+        {
+            label: 'Основная страница',
+            icon: 'pi pi-home',
+            command: () => {navigate("/profile")}
+        },
+        {
+            label: 'Группы',
+            icon: 'pi pi-user-plus',
+            command: () => {navigate("/profile/group")}
+        },
+        {
+            label: 'Планы тренировок и питания',
+            icon: 'pi pi-wave-pulse',
+            command: () => {navigate("/profile/power")}
+        },
     ];
 
     return <section className={styles.profile}>

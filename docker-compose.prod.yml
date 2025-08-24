@@ -50,6 +50,19 @@ services:
     networks: 
       - step_by_step_network     
 
+  power_plan_db:
+    image: postgres:16.2
+    container_name: power_plan_db
+    environment:
+      - POSTGRES_DB=${POWER_PLAN_DB}
+      - POSTGRES_USER=${POWER_PLAN_USER}
+      - POSTGRES_PASSWORD=${POWER_PLAN_PASSWORD}
+    volumes:
+      - postgresdata_power:/var/lib/postgresql/data
+    restart: always 
+    networks: 
+      - power_plan_network    
+
   task_master:
     build:
       context: .
@@ -88,6 +101,26 @@ services:
       - main-network
       - keycloak-main-network
       - step_by_step_network
+    restart: always     
+
+  power_plan:
+    build:
+      context: .
+      dockerfile: plannet_backend_app/power_plan/Dockerfile
+      network: host
+    depends_on:
+      - power_plan_db
+    environment:
+      - ENV=${ENV}
+      - POWER_PLAN_PORT=${POWER_PLAN_PORT}
+      - POWER_PLAN_DB=${POWER_PLAN_DB}
+      - POWER_PLAN_USER=${POWER_PLAN_USER}
+      - POWER_PLAN_PASSWORD=${POWER_PLAN_PASSWORD}
+      - SWAGGER_CLIENT_SECRET=${SWAGGER_CLIENT_SECRET}
+    networks:
+      - main-network
+      - keycloak-main-network
+      - power_plan_network
     restart: always       
 
   keycloak-db:
@@ -147,7 +180,8 @@ volumes:
   cert_data:
   postgresdata:  
   postgresdata_task:  
-  postgresdata_step:  
+  postgresdata_step:
+  postgresdata_power:
 
 networks:
   main-network:
@@ -160,4 +194,6 @@ networks:
   task-master-network:
     driver: bridge  
   step_by_step_network:  
+    driver: bridge
+  power_plan_network:
     driver: bridge

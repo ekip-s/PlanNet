@@ -6,6 +6,7 @@ import new_logo from "../../../assets/new.svg";
 import nginx from "../../../assets/mginx.svg";
 import task_logo from "../../../assets/task.svg";
 import keycloak_logo from "../../../assets/keycloak.svg";
+import power_plan from "../../../assets/powerPlan.svg";
 import HorizontalScroll from "../templates/scroll/HorizontalScroll.tsx";
 import TechnologiesNode from "../molecules/TechnologiesNode.tsx";
 
@@ -109,6 +110,17 @@ const appList:ListNodeProps[] = [
     },
     {
         id: 4,
+        title: "Power Plan",
+        inDevelopment: false,
+        hidden: false,
+        btnTitle: "Вперед ...",
+        logoSvg: power_plan,
+        description: "Персональный сервис для создания индивидуальных планов питания и тренировок, который помогает" +
+            " достигать ваших фитнес-целей",
+        path: "/powerPlan"
+    },
+    {
+        id: 5,
         title: "Тут будет новый сервис",
         inDevelopment: true,
         hidden: false,

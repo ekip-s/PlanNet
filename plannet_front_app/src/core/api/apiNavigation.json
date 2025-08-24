@@ -18,5 +18,9 @@
   "target": {
     "baseUrl": "VITE_STEP_BY_STEP",
     "path": "/target/api/v1"
+  },
+  "power": {
+    "baseUrl": "VITE_POWER_PLAN",
+    "path": "/power/api/v1"
   }
 }
