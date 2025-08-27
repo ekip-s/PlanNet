@@ -1,0 +1,35 @@
+.flexAndSpaceBetween {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.customDropdownPanel {
+    margin-top: 5px;
+}
+
+.customInputText {
+    padding: 3px;
+}
+
+.dropdownPanel {
+    padding: 2px;
+    width: 60%;
+    border: var(--btn-radius-small);
+}
+
+.card {
+    background-color: var(--main-form-color);
+    padding: 6px;
+    margin-bottom: 6px;
+}
+
+.customCheckbox {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 5px;
+    border: 1px solid var(--side-text);
+    padding: 4px;
+    border-radius: var(--btn-radius-small);
+}

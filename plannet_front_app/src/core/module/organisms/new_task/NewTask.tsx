@@ -2,7 +2,7 @@ import styles from "./NewTask.module.css"
 import { InputText } from 'primereact/inputtext';
 import Card from "../../molecules/card/Card.tsx";
 import {useState} from "react";
-import SelectNode from "../../atoms/input_text/SelectNode.tsx";
+import SelectNode, {OptionType} from "../../atoms/input_text/SelectNode.tsx";
 import { InputTextarea } from 'primereact/inputtextarea';
 
 
@@ -24,7 +24,7 @@ const NewTask = () => {
                 </div>
                 <div>
                     <label>Приоритет:</label>
-                    <SelectNode
+                    <SelectNode<number>
                         placeholder="Normal"
                         selected={priority}
                         setSelected = {setPriority}
@@ -40,18 +40,18 @@ const NewTask = () => {
     </section>
 }
 
-const priorityLvl = [
+const priorityLvl: OptionType[] = [
     {
-        label: "Normal",
-        value: 1,
+        name: "Normal",
+        code: 1,
     },
     {
-        label: "Medium",
-        value: 2,
+        name: "Medium",
+        code: 2,
     },
     {
-        label: "High",
-        value: 3,
+        name: "High",
+        code: 3,
     }
 ]
 

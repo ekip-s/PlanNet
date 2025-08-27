@@ -18,8 +18,8 @@ const SelectService = ({services, groupId, token, refresh}: SelectServiceProps) 
     const availableServices = localData.services
         .filter(service => !excludedNames.includes(service))
         .map(serviceName => ({
-            label: serviceName,
-            value: serviceName,
+            name: serviceName,
+            code: serviceName,
         }));
     const [selectedService, setSelectedService] = useState<string>("");
 
@@ -37,7 +37,7 @@ const SelectService = ({services, groupId, token, refresh}: SelectServiceProps) 
 
     return <div className={styles.selectService}>
         {availableServices.length != 0 && <div>
-            <SelectNode<string>
+            <SelectNode
                 placeholder="Сервис"
                 selected={selectedService}
                 setSelected={setSelectedService}

@@ -22,5 +22,9 @@
   "power": {
     "baseUrl": "VITE_POWER_PLAN",
     "path": "/power/api/v1"
+  },
+  "ai_tunnel": {
+    "baseUrl": "VITE_AI_TUNNEL",
+    "path": "/v1/aitunnel"
   }
 }

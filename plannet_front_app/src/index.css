@@ -20,7 +20,7 @@
     --widget-color: rgba(179, 179, 179, 0.91);
 
     --surface-bg: #FFFFFF;
-    --text-accent: #2A6EF0;
+    --text-accent: #2762d1;
 
     --box-copy-color: rgba(42, 110, 240, 0.69);
 
@@ -33,14 +33,14 @@
 }
 
 * {
-  margin: 0;
-  padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
 html,
 body,
 #root {
-  height: 100%;
+    height: 100%;
 }
 
 .global-custom-root {
@@ -85,4 +85,14 @@ body,
 .p-highlight .menu-action {
     border-bottom: 2px solid var(--text-accent); /* активный таб */
     color: var(--text-accent);
+}
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
 }
