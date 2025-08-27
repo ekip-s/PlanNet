@@ -2,19 +2,42 @@ import styles from "./SelectNode.module.css"
 import {Dropdown} from "primereact/dropdown";
 
 interface InputTextProps<T> {
+    id?: string;
+    optionLabel?: string;
     placeholder: string;
     selected: T;
     setSelected: (selected: T) => void;
-    options: OptionType<T>[];
+    options: OptionType[];
 }
 
-interface OptionType<T> {
-    label: string;
-    value: T;
+export interface OptionType {
+    name?: string;
+    code: string | number;
+    [key: string]: unknown;
 }
 
-const SelectNode = <T,>({placeholder, selected, setSelected, options} : InputTextProps<T>) => {
+const SelectNode = <T,>({
+                            id,
+                            optionLabel = "name",
+                            placeholder,
+                            selected,
+                            setSelected,
+                            options
+} : InputTextProps<T>) => {
+
+    const itemTemplate = (option: OptionType) => {
+
+        const label = option[optionLabel];
+
+        return (
+            <div className={styles.node}>
+                {typeof label === "string" ? label : String(label)}
+            </div>
+        );
+    };
+
     return <Dropdown
+        id={id}
         placeholder={placeholder}
         value={selected}
         onChange={e => setSelected(e.value)}
@@ -24,13 +47,5 @@ const SelectNode = <T,>({placeholder, selected, setSelected, options} : InputTex
         itemTemplate={itemTemplate}
     />
 }
-
-const itemTemplate = <T,>(option: OptionType<T>) => {
-    return (
-        <div className={styles.node}>
-            {option.label}
-        </div>
-    );
-};
 
 export default SelectNode;

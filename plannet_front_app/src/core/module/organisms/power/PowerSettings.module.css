@@ -11,6 +11,56 @@
     color: var(--text);
 }
 
-.inputToken {
-    padding: 3px;
+.box {
+    width: 100%;
+    margin-top: 15px;
+}
+
+.inputTextarea {
+    width: 100%;
+    max-width: 100%;
+    min-width: 100%;
+    height: 60px;
+    padding: 4px;
+}
+
+.textWrapper {
+    padding: 10px;
+    color: var(--text);
+    width: 40%;
+}
+
+.textWrapper a {
+    color: var(--text-accent);
+}
+
+.mrBt {
+    margin-bottom: 10px;
+}
+
+.width {
+    width: 80px;
+}
+
+.btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.blueBtn {
+    padding: 5px;
+    border: none;
+    border-radius: 4px;
+    background-color: var(--text-accent);
+    font-size: 15px;
+    height: max-content;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    color: var(--text-btn);
+}
+
+.blueBtn:hover {
+    opacity: 0.7;
 }

@@ -2,6 +2,7 @@ import {TabMenu} from "primereact/tabmenu";
 
 interface TabMenuSelectProps {
     items: ItemsProps[];
+    activeIndex: number
 }
 
 interface ItemsProps {
@@ -11,8 +12,10 @@ interface ItemsProps {
 }
 
 
-const TabMenuSelect = ({ items }: TabMenuSelectProps) => {
-    return <TabMenu model={items} pt={tabMenuPT}/>
+const TabMenuSelect = ({ items, activeIndex }: TabMenuSelectProps) => {
+
+
+    return <TabMenu model={items} pt={tabMenuPT} activeIndex={activeIndex}/>
 }
 
 export default TabMenuSelect;

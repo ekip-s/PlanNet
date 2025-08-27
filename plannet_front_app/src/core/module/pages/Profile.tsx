@@ -1,11 +1,12 @@
 import styles from "./Profile.module.css";
-import {Outlet} from "react-router-dom";
+import {Outlet, useLocation} from "react-router-dom";
 import TabMenuSelect from "../atoms/tab_menu/TabMenuSelect.tsx";
 import {useNavigate} from "react-router";
 
 const Profile = () => {
 
     const navigate = useNavigate();
+    const location = useLocation();
 
     const items = [
         {
@@ -25,10 +26,16 @@ const Profile = () => {
         },
     ];
 
+    const pathMap = ['/profile', '/profile/group', '/profile/power']
+
+    const activeIndex = pathMap.findIndex(path => location.pathname === path);
+
     return <section className={styles.profile}>
-        <TabMenuSelect items={items}/>
+        <TabMenuSelect items={items} activeIndex={activeIndex === -1 ? 0 : activeIndex}/>
         <Outlet />
     </section>
 }
 
 export default Profile;
+
+
