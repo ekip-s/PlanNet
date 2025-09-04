@@ -42,7 +42,10 @@ const App = () => {
                   <Route path="group/join/:code" element={<JoinGroup />} />
                   <Route path="power" element={<PowerSettings />} />
                 </Route>
-                <Route path={'/powerPlan'} element={<PowerPlan />} />
+                <Route path={'/powerPlan'} element={<PowerPlan />}>
+                  <Route path="mealPlan" element={<div>mealPlan</div>} />
+                  <Route path="workout" element={<div>workout</div>} />
+                </Route>
               </Route>
             </Routes>
           </main>
